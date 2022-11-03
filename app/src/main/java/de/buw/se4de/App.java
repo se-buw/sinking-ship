@@ -39,6 +39,8 @@ public class App {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new App().getGreeting());
+		grid first_grid = new grid();
+		//first_grid.cells[0][0].dead = true;
+		first_grid.print();
 	}
 }
