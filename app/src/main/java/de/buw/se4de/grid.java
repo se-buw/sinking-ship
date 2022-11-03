@@ -18,5 +18,22 @@ public class grid {
         return  true;
     }
 
+    public void print() {
 
+        System.out.println("\n  0 1 2 3 4 5 6 7 8 9  ");
+        for(int current_row=0; current_row < this.rows;current_row++) {
+            System.out.print(current_row+"|");
+            for (int current_col=0; current_col<this.cells[current_row].length;current_col++){
+                if(cells[current_row][current_col]==null){
+                    System.out.print("~ ");
+                } else if(cells[current_row][current_col].dead){
+                    System.out.print("X ");
+                } else {
+                    System.out.print(cells[current_row][current_col]);
+                }
+            }
+            System.out.println("|"+current_row);
+        }
+        System.out.println("  0 1 2 3 4 5 6 7 8 9  ");
+    }
 }
