@@ -26,7 +26,6 @@ public class App {
 		System.out.println("Do you want to play a game? y/n" );
 		String input = scanner.nextLine();
 		if (Objects.equals(input, "y")){
-			System.out.println(first_grid.rows + " " + first_grid.collums);
 			first_grid.playsinglegame();
 		}
 	}

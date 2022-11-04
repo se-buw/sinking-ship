@@ -27,7 +27,7 @@ public class grid {
         Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
     }
 
-    public void print() {
+    public void PrintEnemyGrid() {
 
         System.out.println("\n  0 1 2 3 4 5 6 7 8 9  ");
         for(int current_row=0; current_row < this.rows;current_row++) {
@@ -67,7 +67,7 @@ public class grid {
 
     public void playsinglegame(){
         while (ships.length!=0){
-            print();
+            PrintEnemyGrid();
             Scanner scanner = new Scanner(System.in);
             System.out.println("Where do you wish to shoot? Letter Number ");
             String row = scanner.nextLine();
