@@ -49,6 +49,7 @@ public class grid {
         }
         System.out.println("  0 1 2 3 4 5 6 7 8 9  ");
     }
+
     public void shoot(String row, int collum){
         int rowInt = searchLetters(row);
         if (cells[rowInt][collum].hasShip){
@@ -56,13 +57,9 @@ public class grid {
         }
         cells[rowInt][collum].dead=true;
     }
+
     public boolean checkShip(cell cell){
-        if (!cell.dead){
-            return false;
-        }if(!cell.hasShip){
-            return false;
-        }
-        return true;
+        return cell.dead && cell.hasShip;
     }
 
     public void playsinglegame(){
@@ -71,13 +68,13 @@ public class grid {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Where do you wish to shoot? Letter Number ");
             String row = scanner.nextLine();
-            int collum = scanner.nextInt();
-            shoot(row,collum);
+            int collumn = scanner.nextInt();
+            shoot(row,collumn);
         }
     }
 
     public int searchLetters(String s){
-        for (int i =0;i< letters.length;++i) {
+        for (int i=0;i< letters.length;++i) {
             char c = s.charAt(0);
             if (c==letters[i]){
                 return i;
