@@ -48,12 +48,9 @@ public class grid {
             System.out.println("|"+letters[current_row]);
         }
         System.out.println("  0 1 2 3 4 5 6 7 8 9  ");
-        System.out.println(cells[9][9].dead);
     }
     public void shoot(String row, int collum){
-        System.out.println("shooting cell ...");
         int rowInt = searchLetters(row);
-        System.out.println(rowInt + " "+  collum);
         if (cells[rowInt][collum].hasShip){
             cells[rowInt][collum].shotShip=true;
         }
