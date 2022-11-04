@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.InputMismatchException;
+import java.util.Objects;
 import java.util.Scanner;
 
 import org.apache.commons.csv.CSVFormat;
@@ -14,33 +16,18 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 public class App {
-	public String getGreeting() {
-		String result = "";
-		try (Reader reader = Files.newBufferedReader(Paths.get("src/main/resources/book.csv"));
-				@SuppressWarnings("deprecation")
-				CSVParser csvParser = new CSVParser(reader,
-						CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
-			for (CSVRecord csvRecord : csvParser) {
-				String name = csvRecord.get("author");
-				result += "Hello " + name + "!\n";
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-		System.out.println("Enter your name:");
-		Scanner scanner = new Scanner(System.in);
-		String inputString = scanner.nextLine();
-		System.out.println("Hello " + inputString + "!");
-		scanner.close();
-
-		return result;
-	}
 
 	public static void main(String[] args) {
 		grid first_grid = new grid();
 		//first_grid.cells[0][0].dead = true;
-		first_grid.print();
+
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Do you want to play a game? y/n" );
+		String input = scanner.nextLine();
+		if (Objects.equals(input, "y")){
+			System.out.println("Okay lets play a game!");
+			first_grid.playsinglegame();
+		}
 	}
 }
