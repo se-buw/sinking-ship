@@ -26,29 +26,6 @@ public class grid {
 
         Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
     }
-
-    public void PrintEnemyGrid() {
-
-        System.out.println("\n  0 1 2 3 4 5 6 7 8 9  ");
-        for(int current_row=0; current_row < this.rows;current_row++) {
-            System.out.print(letters[current_row]+"|");
-            for (int current_col=0; current_col<this.cells[current_row].length;current_col++){
-                cell current_cell = cells[current_row][current_col];
-                //if cell has a shot ship
-                if (checkShip(current_cell)){
-                    System.out.print("= ");
-                }//if cell is dead but no ship
-                else if(current_cell.dead){
-                    System.out.print("X ");
-                }//if cell is not dead
-                else {
-                    System.out.print("~ ");
-                }
-            }
-            System.out.println("|"+letters[current_row]);
-        }
-        System.out.println("  0 1 2 3 4 5 6 7 8 9  ");
-    }
     public void shoot(String row, int collum){
         int rowInt = searchLetters(row);
         if (cells[rowInt][collum].hasShip){
@@ -74,6 +51,29 @@ public class grid {
             int collum = scanner.nextInt();
             shoot(row,collum);
         }
+    }
+
+    public void PrintEnemyGrid() {
+
+        System.out.println("\n  0 1 2 3 4 5 6 7 8 9  ");
+        for(int current_row=0; current_row < this.rows;current_row++) {
+            System.out.print(letters[current_row]+"|");
+            for (int current_col=0; current_col<this.cells[current_row].length;current_col++){
+                cell current_cell = cells[current_row][current_col];
+                //if cell has a shot ship
+                if (checkShip(current_cell)){
+                    System.out.print("= ");
+                }//if cell is dead but no ship
+                else if(current_cell.dead){
+                    System.out.print("X ");
+                }//if cell is not dead
+                else {
+                    System.out.print("~ ");
+                }
+            }
+            System.out.println("|"+letters[current_row]);
+        }
+        System.out.println("  0 1 2 3 4 5 6 7 8 9  ");
     }
 
     public int searchLetters(String s){
