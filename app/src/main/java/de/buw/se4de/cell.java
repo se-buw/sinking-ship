@@ -7,9 +7,9 @@ public class cell{
     boolean NearShip;
 
     public cell(){
-        boolean dead = false;
-        boolean hasShip = false;
-        boolean shotShip = false;
-        boolean NearShip = false;
+        this.dead = false;
+        this.hasShip = false;
+        this.shotShip = false;
+        this.NearShip = false;
     }
 }

@@ -5,21 +5,29 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class grid {
-    int rows = 10;
-    int collums = 10;
-    Ship[] ships= new Ship[5];
-    cell[][] cells= new cell[rows][collums];
+    int rows;
+    int collums;
+    Ship[] ships;
+    cell[][] cells;
 
     Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
 
-
-    public void print() {
+    public grid(){
+        this.rows = 10;
+        this.collums = 10;
+        this.ships= new Ship[5];
+        this.cells= new cell[rows][collums];
 
         for(int i=0;i<rows;i++){
             for (int j=0;j<collums;j++){
                 cells[i][j]= new cell();
             }
         }
+
+        Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
+    }
+
+    public void print() {
 
         System.out.println("\n  0 1 2 3 4 5 6 7 8 9  ");
         for(int current_row=0; current_row < this.rows;current_row++) {
