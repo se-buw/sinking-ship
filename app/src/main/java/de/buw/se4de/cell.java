@@ -9,6 +9,7 @@ public class cell{
     public cell(){
         boolean dead = false;
         boolean hasShip = false;
+        boolean shotShip = false;
         boolean NearShip = false;
     }
 }
