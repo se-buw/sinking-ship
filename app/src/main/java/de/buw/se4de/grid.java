@@ -36,9 +36,25 @@ public class grid {
         */
     }
 
-    public void setSingleShip(Ship ship){
-        Scanner scanner = new Scanner(System.in);
-
+    public void SetPlayerShip(){
+        //checking wich ship to place
+        boolean NotValidLength = true;
+        int len=0;
+        while (NotValidLength) {
+            System.out.println("You have the following ship lengths remaining: ");
+            printShipLengths();
+            System.out.println("Which ship do you want to place? (in length)");
+            len = scanner.nextInt();
+            //checking for valid len, still need to catch non-number inputs
+            if (!lengthCheck(len)) {
+                System.out.println("Please try again with a valid length.");
+            }else {
+                NotValidLength = false;
+                shiplength.remove(len);
+            }
+        }
+        Ship ship = new Ship();
+        ship.len = len;
         System.out.println("\nThis is a ship of size: "+ship.len);
         System.out.println("\nHorizontal ships Bows always look to the west, and vertical ships bows look to the north");
         System.out.println("\nDo you want this ship horizontally? y/n");
@@ -122,11 +138,12 @@ public class grid {
     public void placingShip(){
         //checking wich ship to place
         boolean NotValidLength = true;
+        int len=0;
         while (NotValidLength) {
             System.out.println("You have the following ship lengths remaining: ");
             printShipLengths();
             System.out.println("Which ship do you want to place? (in length)");
-            int len = scanner.nextInt();
+            len = scanner.nextInt();
             //checking for valid len, still need to catch non-number inputs
             if (!lengthCheck(len)) {
                 System.out.println("Please try again with a valid length.");
@@ -135,7 +152,31 @@ public class grid {
                 shiplength.remove(len);
             }
         }
-        //now place the ship
+        //where to place ship: row or column
+        boolean NotValidShipPos = true;
+        boolean ShipInRow;
+        while (NotValidShipPos){
+            System.out.println("Where do you want to place your ship? Row (r) / Column (c)");
+            String s = scanner.nextLine();
+            if (s.equals("r")||s.equals("R")){
+                NotValidShipPos = false;
+                ShipInRow = true;
+            }else if (s.equals("c") ||  s.equals("C")){
+                NotValidShipPos =false;
+                System.out.println("In which columns do you want to place the ship? start NextLine end");
+                int start =  scanner.nextInt();
+                int end = scanner.nextInt();
+                int diff = end-start;
+                if(diff!=len){
+                    System.out.println("Please enter Ship with valid length.");
+                }else{
+
+                }
+                ShipInRow = false;
+            }else {
+                System.out.println("Please enter r for row or c for column");
+            }
+        }
     }
     public int searchLetters(String s){
         for (int i=0;i< letters.length;++i) {
