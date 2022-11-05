@@ -16,7 +16,7 @@ public class grid {
     public grid(){
         this.rows = 10;
         this.collums = 10;
-        this.ships= new Ship[5];
+        this.ships= new Ship[6];
         this.cells= new cell[rows][collums];
 
         for(int i=0;i<rows;i++){
@@ -60,7 +60,7 @@ public class grid {
         System.out.println("\nDo you want this ship horizontally? y/n");
         String hor = scanner.nextLine();
         if(hor.equals("n")){ship.isVert = true;}
-
+        //need to rename condition
         boolean condition = false;
         while(!condition) {
             System.out.println("\nwhich column do you want the ships bow to end? Letter");
