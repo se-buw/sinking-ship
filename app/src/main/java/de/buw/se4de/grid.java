@@ -147,22 +147,14 @@ public class grid {
         return -1;
     }
     public int searchNumbers(int i){
-        for (int j=0;j<shiplength.length;++j){
-            if (i==shiplength[j]){
+        for (int j=0;j<shiplength.size();++j){
+            if (i==shiplength.get(j)){
                 return i;
             }
         }
         return -1;
     }
-    public void remove(int[] intarray,int index){
-        int[] copy = new int[shiplength.length];
-        for (int i=0,j = 0;i<intarray.length;i++){
-            if (i!=index){
 
-            }
-            intarray[i] = intarray[i+1];
-        }
-    }
     public boolean lengthCheck(int len){
         for (int i : shiplength){
             if(len==i){
