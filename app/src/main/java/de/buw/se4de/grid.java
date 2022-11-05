@@ -26,6 +26,27 @@ public class grid {
 
         Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
     }
+    public void shoot(String row, int collum){
+        int rowInt = searchLetters(row);
+        if (cells[rowInt][collum].hasShip){
+            cells[rowInt][collum].shotShip=true;
+        }
+        cells[rowInt][collum].dead=true;
+    }
+    public boolean checkShip(cell cell){
+        return cell.dead && cell.hasShip;
+    }
+
+    public void playsinglegame(){
+        while (ships.length!=0){
+            PrintEnemyGrid();
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Where do you wish to shoot? Letter Number ");
+            String row = scanner.nextLine();
+            int collumn = scanner.nextInt();
+            shoot(row,collumn);
+        }
+    }
 
     public void PrintEnemyGrid() {
 
@@ -48,29 +69,6 @@ public class grid {
             System.out.println("|"+letters[current_row]);
         }
         System.out.println("  0 1 2 3 4 5 6 7 8 9  ");
-    }
-
-    public void shoot(String row, int collum){
-        int rowInt = searchLetters(row);
-        if (cells[rowInt][collum].hasShip){
-            cells[rowInt][collum].shotShip=true;
-        }
-        cells[rowInt][collum].dead=true;
-    }
-
-    public boolean checkShip(cell cell){
-        return cell.dead && cell.hasShip;
-    }
-
-    public void playsinglegame(){
-        while (ships.length!=0){
-            PrintEnemyGrid();
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Where do you wish to shoot? Letter Number ");
-            String row = scanner.nextLine();
-            int collumn = scanner.nextInt();
-            shoot(row,collumn);
-        }
     }
 
     public int searchLetters(String s){

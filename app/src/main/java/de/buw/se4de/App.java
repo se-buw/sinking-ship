@@ -17,7 +17,6 @@ import org.apache.commons.csv.CSVRecord;
 
 public class App {
 
-
 	public static void main(String[] args) {
 		grid first_grid = new grid();
 		//first_grid.cells[0][0].dead = true;
