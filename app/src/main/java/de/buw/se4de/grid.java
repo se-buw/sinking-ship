@@ -27,13 +27,7 @@ public class grid {
 
         for (int i =0;i< ships.length;i++){
             ships[i]=new Ship();
-        }/*
-        this.ships[0] = new Ship2();
-        this.ships[1] = new Ship3();
-        this.ships[2] = new Ship4();
-        this.ships[3] = new Ship4();
-        this.ships[4] = new Ship5();
-        */
+        }
     }
 
     public void SetPlayerShip(){
