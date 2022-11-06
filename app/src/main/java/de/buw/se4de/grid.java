@@ -29,7 +29,12 @@ public class grid {
             ships[i]=new Ship();
         }
     }
-
+/* TODO:
+*  Implement check for ship placement when ships are nearby
+*  Implement Grid for player
+*  Implement AI placement for ships
+*  Implement AI to play against
+* */
     public void shoot(String row, int column){
         int rowInt = searchLetters(row);
         if (cells[rowInt][column].hasShip){
@@ -172,6 +177,8 @@ public class grid {
                     NotValidShipPos = false;
                     changingCellsCol(StartString,EndString,c);
                 }
+            }else{
+                System.out.println("Unknown Error please try again");
             }
         }
     }
