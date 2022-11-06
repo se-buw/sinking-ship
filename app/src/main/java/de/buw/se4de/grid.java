@@ -97,7 +97,8 @@ public class grid {
                 System.out.println("Please try again with a valid length.");
             }else {
                 NotValidLength = false;
-                shiplength.remove(len);
+                //removes index so first need to find inedex of len
+                shiplength.remove(Integer.valueOf(len));
             }
         }
         //where to place ship: row or column
@@ -155,7 +156,6 @@ public class grid {
                 //Input Numbers
                 System.out.println("Please enter a start and end number.");
                 StartInt = scanner.nextInt();
-                EndInt = scanner.nextInt(); //clearing keyboard input
                 EndInt = scanner.nextInt();
                 if(checkValidPlacingNumber(StartInt,EndInt,len)){
                     NotValidShipPos = false;
@@ -165,10 +165,7 @@ public class grid {
                 System.out.println("Please Enter start and end Row");
                 StartString = scanner.nextLine();//clearing keyboard input
                 StartString = scanner.nextLine();
-                //EndString = scanner.nextLine(); //clearing keyboard input
                 EndString = scanner.nextLine();
-                System.out.println(StartString);
-                System.out.println(EndString);
                 int StartStringInt = searchLetters(StartString);
                 int EndStringInt = searchLetters(EndString);
                 if (checkValidPlacingNumber(StartStringInt,EndStringInt,len)){
@@ -279,7 +276,7 @@ public class grid {
                 cells[i][col-1].NearShip = true;
             }
         }//Bottom - left
-        else if (endString.equals("J") && start == 0 ) {
+        else if (endString.equals("J") && col == 0 ) {
             cells[start-1][col].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[i][col].hasShip = true;
@@ -287,7 +284,7 @@ public class grid {
                 cells[i][col+1].NearShip = true;
             }
         }//Bottom - right
-        else if(endString.equals("J")&& end == 9){
+        else if(endString.equals("J") && col == 9){
             cells[start-1][col].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[i][col].hasShip = true;
@@ -349,8 +346,9 @@ public class grid {
     }
     //print remaining ship lengths
     public void printShipLengths(){
-        for (int i:shiplength){
-            System.out.print(i+", ");
+        for (int i=0;i<shiplength.size()-1;i++){
+            System.out.print(shiplength.get(i) +", ");
         }
+        System.out.println(shiplength.get(shiplength.size()-1));
     }
 }
