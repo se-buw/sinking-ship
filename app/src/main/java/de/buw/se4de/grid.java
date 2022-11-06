@@ -132,7 +132,7 @@ public class grid {
                 while (NotValidColumn) {
                     System.out.println("In which columns do you want to place the ship?");
                     c = scanner.nextInt();
-                    if (0 < c && c < 9) {
+                    if (0 <= c && c <= 9) {
                         NotValidColumn = false;
                     } else {
                         System.out.println("Please enter valid column.");
