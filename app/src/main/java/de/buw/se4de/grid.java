@@ -104,19 +104,19 @@ public class grid {
         boolean NotValidShipPos = true;
         boolean ShipInRow=false;
         boolean ShipInCol=false;
-        String s="";   //string for row/column and which row input
+        String s=" ";   //string for row/column and which row input
         int c =-1; //integer for which column input
         while (NotValidShipPos){
             System.out.println("Where do you want to place your ship? Row (r) / Column (c)");
+            s = scanner.nextLine(); //clearing keyboard input buffer bc java is trash
             s = scanner.nextLine();
-            //double print here???
             if (s.equals("r")||s.equals("R")){
                 NotValidShipPos = false;
                 ShipInRow = true;
 
                 boolean NotValidRow = true;
                 while(NotValidRow) {
-                    System.out.println("In which row do you want to place the Ship?");
+                    System.out.println("In which row do you want to place the Ship? Letter");
                     s = scanner.nextLine();
                     if (searchLetters(s) == -1) {
                         System.out.println("Please enter valid row.");
@@ -130,7 +130,7 @@ public class grid {
 
                 boolean NotValidColumn = true;
                 while (NotValidColumn) {
-                    System.out.println("In which columns do you want to place the ship?");
+                    System.out.println("In which column do you want to place the ship? Number");
                     c = scanner.nextInt();
                     if (0 <= c && c <= 9) {
                         NotValidColumn = false;
@@ -155,6 +155,7 @@ public class grid {
                 //Input Numbers
                 System.out.println("Please enter a start and end number.");
                 StartInt = scanner.nextInt();
+                EndInt = scanner.nextInt(); //clearing keyboard input
                 EndInt = scanner.nextInt();
                 if(checkValidPlacingNumber(StartInt,EndInt,len)){
                     NotValidShipPos = false;
@@ -162,8 +163,12 @@ public class grid {
                 }
             }else if (ShipInCol){
                 System.out.println("Please Enter start and end Row");
+                StartString = scanner.nextLine();//clearing keyboard input
                 StartString = scanner.nextLine();
+                //EndString = scanner.nextLine(); //clearing keyboard input
                 EndString = scanner.nextLine();
+                System.out.println(StartString);
+                System.out.println(EndString);
                 int StartStringInt = searchLetters(StartString);
                 int EndStringInt = searchLetters(EndString);
                 if (checkValidPlacingNumber(StartStringInt,EndStringInt,len)){
@@ -186,6 +191,14 @@ public class grid {
                 cells[rowint][i].NearShip = true;
                 cells[rowint + 1][i].NearShip = true;
             }
+        }//Top - right
+        else if (row.equals("A") && end == 9) {
+            cells[rowint][start-1].NearShip = true;
+            for (int i = start; i<=end; i++) {
+                cells[rowint][i].hasShip = true;
+                cells[rowint][i].NearShip = true;
+                cells[rowint + 1][i].NearShip = true;
+            }
         }//only Top
         else if (row.equals("A")) {
             cells[rowint][start-1].NearShip = true;
@@ -196,17 +209,17 @@ public class grid {
                 cells[rowint][i].NearShip = true;
                 cells[rowint + 1][i].NearShip = true;
             }
-        }//Top - right
-        else if (row.equals("A") && end == 9) {
-            cells[rowint][start-1].NearShip = true;
-            for (int i = start; i<=end; i++) {
-                cells[rowint][i].hasShip = true;
-                cells[rowint][i].NearShip = true;
-                cells[rowint + 1][i].NearShip = true;
-            }
         }//Bottom - left
         else if (row.equals("J") && start == 0 ) {
             cells[rowint][end+1].NearShip = true;
+            for (int i = start; i<=end; i++) {
+                cells[rowint][i].hasShip = true;
+                cells[rowint][i].NearShip = true;
+                cells[rowint - 1][i].NearShip = true;
+            }
+        }//Bottom - right
+        else if(row.equals("J")&& end == 9){
+            cells[rowint][start-1].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[rowint][i].hasShip = true;
                 cells[rowint][i].NearShip = true;
@@ -221,14 +234,6 @@ public class grid {
                 cells[rowint][i].NearShip = true;
                 cells[rowint - 1][i].NearShip = true;
             }
-        }//Bottom - right
-        else if(row.equals("J")&& end == 9){
-                cells[rowint][start-1].NearShip = true;
-                for (int i = start; i<=end; i++) {
-                    cells[rowint][i].hasShip = true;
-                    cells[rowint][i].NearShip = true;
-                    cells[rowint - 1][i].NearShip = true;
-                }
         }//everything else
         else {
             cells[rowint][start-1].NearShip = true;
@@ -250,38 +255,36 @@ public class grid {
 
         // left - top
         if (startString.equals("A") && col == 0) {
-            cells[start][col+1].NearShip = true;
-
+            cells[end+1][col].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[i][col].hasShip = true;
                 cells[i][col].NearShip = true;
-                cells[i][col].NearShip = true;
+                cells[i][col+1].NearShip = true;
             }
         }//Top - right
-        else if (startString.equals("A") && end == 9) {
-            cells[start-1][col].NearShip = true;
-            for (int i = start; i<=end; i++) {
-                cells[i][col].hasShip = true;
-                cells[i][col].NearShip = true;
-                cells[i][col+1].NearShip = true;
-            }
-        }//only Top
-        else if (startString.equals("A")) {
-            cells[start-1][col].NearShip = true;
-            cells[end+1][col].NearShip = true;
-
-            for (int i = start; i<=end; i++) {
-                cells[i][col].hasShip = true;
-                cells[i][col].NearShip = true;
-                cells[i][col+1].NearShip = true;
-            }
-        }//Bottom - left
-        else if (endString.equals("J") && start == 0 ) {
+        else if (startString.equals("A") && col == 9) {
             cells[end+1][col].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[i][col].hasShip = true;
                 cells[i][col].NearShip = true;
                 cells[i][col-1].NearShip = true;
+            }
+        }//only Top
+        else if (startString.equals("A")) {
+            cells[end+1][col].NearShip = true;
+            for (int i = start; i<=end; i++) {
+                cells[i][col].hasShip = true;
+                cells[i][col].NearShip = true;
+                cells[i][col+1].NearShip = true;
+                cells[i][col-1].NearShip = true;
+            }
+        }//Bottom - left
+        else if (endString.equals("J") && start == 0 ) {
+            cells[start-1][col].NearShip = true;
+            for (int i = start; i<=end; i++) {
+                cells[i][col].hasShip = true;
+                cells[i][col].NearShip = true;
+                cells[i][col+1].NearShip = true;
             }
         }//Bottom - right
         else if(endString.equals("J")&& end == 9){
@@ -294,11 +297,11 @@ public class grid {
         }//Bottom
         else if (endString.equals("J")) {
             cells[start-1][col].NearShip = true;
-            cells[end+1][col].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[i][col].hasShip = true;
                 cells[i][col].NearShip = true;
                 cells[i][col-1].NearShip = true;
+                cells[i][col+1].NearShip = true;
             }
         }
         //everything else
@@ -328,8 +331,8 @@ public class grid {
     }
 
     public int searchLetters(String s){
+        char c = s.charAt(0);
         for (int i=0;i< letters.length;++i) {
-            char c = s.charAt(0);
             if (c==letters[i]){
                 return i;
             }
