@@ -336,15 +336,6 @@ public class grid {
         }
         return -1;
     }
-    public int searchNumbers(int i){
-        for (int j=0;j<shiplength.size();++j){
-            if (i==shiplength.get(j)){
-                return i;
-            }
-        }
-        return -1;
-    }
-
     public boolean lengthCheck(int len){
         for (int i : shiplength){
             if(len==i){
