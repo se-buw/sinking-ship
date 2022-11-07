@@ -9,6 +9,10 @@ public class GameEngine {
 
     public void standardGame(){
         Scanner scanner = new Scanner(System.in);
+        while (EnemyGrid.shiplength.size()!=0){
+            PlayerGrid.PlacingEnemyShip();
+            PlayerGrid.PrintPLayerGrid();
+        }
         while (PlayerGrid.shiplength.size()!=0){
             PlayerGrid.PlacingPlayerShip();
             PlayerGrid.PrintPLayerGrid();

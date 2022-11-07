@@ -3,6 +3,7 @@ package de.buw.se4de;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class grid {
     int rows;
@@ -12,6 +13,7 @@ public class grid {
     Scanner scanner = new Scanner(System.in);
     Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
     ArrayList<Integer> shiplength= new ArrayList<>(Arrays.asList(5,4,4,3,3,2));
+
 
     public grid(){
         this.rows = 10;
@@ -94,7 +96,7 @@ public class grid {
     }
     //let the enemy player place one ship
     public void PlacingPlayerShip(){
-        //checking wich ship to place
+        //checking which ship to place
         boolean NotValidLength = true;
         int len=0;
         while (NotValidLength) {
@@ -107,7 +109,7 @@ public class grid {
                 System.out.println("Please try again with a valid length.");
             }else {
                 NotValidLength = false;
-                //removes index so first need to find inedex of len
+                //removes index so first need to find index of len
                 shiplength.remove(Integer.valueOf(len));
             }
         }
@@ -142,7 +144,7 @@ public class grid {
                         if(checkValidPlacingNumber(StartInt,EndInt,len) &&
                                 checkValidPlacement(searchLetters(s),StartInt,searchLetters(s),EndInt)){
                             changingCellsRow(StartInt,EndInt,s);
-                            NotValidShipPos =false;
+                            NotValidShipPos=false;
                         }else{
                             System.out.println("Invalid Number Input, please try again.");
                         }
@@ -160,27 +162,53 @@ public class grid {
                         System.out.println("Please Enter Row");
                         StartString = scanner.nextLine();//clearing keyboard input
                         StartString = scanner.nextLine();
+
                         int StartStringInt = searchLetters(StartString);
                         int EndStringInt = StartStringInt+len-1;
                         if (checkValidPlacingNumber(StartStringInt,EndStringInt,len) &&
                                 checkValidPlacement(searchLetters(StartString),c,EndStringInt,c)){
-
                             changingCellsCol(StartString,len,c);
                             NotValidShipPos =false;
-                        }else {
-                            System.out.println("Invalid Input, please try again.");
-                        }
-                    } else {
-                        System.out.println("Please enter valid column.");
-                    }
+                        }else {System.out.println("Invalid Input, please try again.");}
+                    } else {System.out.println("Please enter valid column.");}
                 }
-            }else {
-                System.out.println("Please enter r for row or c for column");
-            }
+            }else {System.out.println("Please enter r for row or c for column");}
         }
     }
 
     public void PlacingEnemyShip(){
+        for(Integer len : shiplength){
+            int Vert = ThreadLocalRandom.current().nextInt(0, 2);
+            int randCol = ThreadLocalRandom.current().nextInt(0, 10);
+            int endCol = randCol+len;
+            int randRow = ThreadLocalRandom.current().nextInt(0, 10);
+            int endRow = randRow+len;
+
+            boolean condition = false;
+            while(!condition){
+                if (checkIfEndInside(randRow,len) &&
+                        checkValidPlacement(randRow,randCol,endRow,randCol) && Vert == 0){
+                    String randRowString = String.valueOf(randRow);
+                    changingCellsCol(randRowString,len,randCol);
+                    condition = true;
+                }
+
+                else if(checkIfEndInside(randCol,len) &&
+                        checkValidPlacement(randRow,randCol,randRow,endCol) && Vert == 1){
+                    String randRowString = String.valueOf(randRow);
+                    changingCellsRow(randCol, endCol, randRowString);
+                    condition = true;
+                }
+
+                else{
+                    Vert = ThreadLocalRandom.current().nextInt(0, 2);
+                    randCol = ThreadLocalRandom.current().nextInt(0, 10);
+                    endCol = randCol+len;
+                    randRow = ThreadLocalRandom.current().nextInt(0, 10);
+                    endRow = randRow+len;
+                }
+            }
+        }
 
     }
 
@@ -253,7 +281,7 @@ public class grid {
             }
         }
     }
-    public  void changingCellsCol(String startString, int len, int col){
+    public void changingCellsCol(String startString, int len, int col){
         //changing nearShip of nearby cells
 
         int start = searchLetters(startString);
@@ -338,6 +366,11 @@ public class grid {
         if (start<0||start>9 || end <0 || end >9){
             return false;
         }else return true;
+    }
+    public boolean checkIfEndInside(int start, int len){
+        int end = start+len;
+        return !(end > 9);
+
     }
 
     public int searchLetters(String s){

@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.InputMismatchException;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -19,7 +20,6 @@ public class App {
 
 	public static void main(String[] args) {
 		GameEngine ge = new GameEngine();
-		//first_grid.cells[0][0].dead = true;
 
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Do you want to play a game? y/n" );
