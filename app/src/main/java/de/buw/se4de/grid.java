@@ -55,8 +55,8 @@ public class grid {
                 //if cell has a shot ship
                 if (checkShip(current_cell)){
                     System.out.print("0 ");
-                }//if cell has a ship (testing)
-                else if(current_cell.hasShip){
+                }//if cell has a ship that was not shot
+                else if(current_cell.hasShip && !current_cell.dead){
                     System.out.print("H ");
                 }//cell was shot but missed ships
                 else if(current_cell.dead){
@@ -80,9 +80,6 @@ public class grid {
                 //if cell has a shot ship
                 if (checkShip(current_cell)){
                     System.out.print("0 ");
-                }//if cell has a ship (testing)
-                else if(current_cell.hasShip && current_cell.dead){
-                    System.out.print("H ");
                 }//cell was shot but missed ships
                 else if(current_cell.dead){
                     System.out.print("X ");
@@ -352,11 +349,7 @@ public class grid {
         int diff = end - start;
         if (start<0||start>9 || end <0 || end >9){
             return false;
-        }else if(diff!=len){
-            return true;
-        }else {
-            return false;
-        }
+        }else return diff != len;
     }
 
     public int searchLetters(String s){
