@@ -56,7 +56,7 @@ public class grid {
                 if (checkShip(current_cell)){
                     System.out.print("0 ");
                 }//if cell has a ship that was not shot
-                else if(current_cell.hasShip && !current_cell.dead){
+                else if(current_cell.hasShip){
                     System.out.print("H ");
                 }//cell was shot but missed ships
                 else if(current_cell.dead){
@@ -112,18 +112,20 @@ public class grid {
             }
         }
         //where to place ship: row or column
+        //declaring some var for later use
         boolean NotValidShipPos = true;
-        boolean ShipInRow=false;
-        boolean ShipInCol=false;
+        int StartInt;
+        int EndInt;
+        String StartString;
+        String EndString;
+
         String s=" ";   //string for row/column and which row input
         int c =-1; //integer for which column input
         while (NotValidShipPos){
             System.out.println("Where do you want to place your ship? Row (r) / Column (c)");
-            s = scanner.nextLine(); //clearing keyboard input buffer bc java is trash
+            s = scanner.nextLine(); //clearing keyboard input buffer
             s = scanner.nextLine();
             if (s.equals("r")||s.equals("R")){
-                NotValidShipPos = false;
-                ShipInRow = true;
 
                 boolean NotValidRow = true;
                 while(NotValidRow) {
@@ -132,64 +134,48 @@ public class grid {
                     if (searchLetters(s) == -1) {
                         System.out.println("Please enter valid row.");
                     }else {
+                        //input is valid row, now place ship in row
                         NotValidRow = false;
+                        System.out.println("Please enter a start number.");
+                        StartInt = scanner.nextInt();
+                        EndInt = StartInt+len-1;
+                        if(checkValidPlacingNumber(StartInt,EndInt,len) &&
+                                checkValidPlacement(searchLetters(s),StartInt,searchLetters(s),EndInt)){
+                            changingCellsRow(StartInt,EndInt,s);
+                            NotValidShipPos =false;
+                        }else{
+                            System.out.println("Invalid Number Input, please try again.");
+                        }
                     }
                 }
             }else if (s.equals("c") ||  s.equals("C")){
-                NotValidShipPos =false;
-                ShipInCol = true;
 
                 boolean NotValidColumn = true;
                 while (NotValidColumn) {
                     System.out.println("In which column do you want to place the ship? Number");
                     c = scanner.nextInt();
                     if (0 <= c && c <= 9) {
+                        //input is valid column now placing ship
                         NotValidColumn = false;
+                        System.out.println("Please Enter Row");
+                        StartString = scanner.nextLine();//clearing keyboard input
+                        StartString = scanner.nextLine();
+                        int StartStringInt = searchLetters(StartString);
+                        int EndStringInt = StartStringInt+len-1;
+                        if (checkValidPlacingNumber(StartStringInt,EndStringInt,len) &&
+                                checkValidPlacement(searchLetters(StartString),c,EndStringInt,c)){
+
+                            changingCellsCol(StartString,len,c);
+                            NotValidShipPos =false;
+                        }else {
+                            System.out.println("Invalid Input, please try again.");
+                        }
                     } else {
                         System.out.println("Please enter valid column.");
                     }
                 }
             }else {
                 System.out.println("Please enter r for row or c for column");
-            }
-        }
-
-        //now  placing the ship
-        NotValidShipPos = true;
-        int StartInt;
-        int EndInt;
-        String StartString;
-        String EndString;
-
-        while(NotValidShipPos){
-            if (ShipInRow){
-                //Input Numbers
-                System.out.println("Please enter a start and end number.");
-                StartInt = scanner.nextInt();
-                EndInt = scanner.nextInt();
-                if(checkValidPlacingNumber(StartInt,EndInt,len) &&
-                        checkValidPlacement(searchLetters(s),StartInt,searchLetters(s),EndInt)){
-                    NotValidShipPos = false;
-                    changingCellsRow(StartInt,EndInt,s);
-                }else{
-                    System.out.println("Invalid Number Input, please try again.");
-                }
-            }else if (ShipInCol){
-                System.out.println("Please Enter start and end Row");
-                StartString = scanner.nextLine();//clearing keyboard input
-                StartString = scanner.nextLine();
-                EndString = scanner.nextLine();
-                int StartStringInt = searchLetters(StartString);
-                int EndStringInt = searchLetters(EndString);
-                if (checkValidPlacingNumber(StartStringInt,EndStringInt,len) &&
-                        checkValidPlacement(searchLetters(StartString),c,searchLetters(EndString),c)){
-                    NotValidShipPos = false;
-                    changingCellsCol(StartString,EndString,c);
-                }else {
-                    System.out.println("Invalid Input, please try again.");
-                }
-            }else{
-                System.out.println("Unknown Error please try again");
             }
         }
     }
@@ -267,12 +253,12 @@ public class grid {
             }
         }
     }
-    public  void changingCellsCol(String startString, String endString, int col){
+    public  void changingCellsCol(String startString, int len, int col){
         //changing nearShip of nearby cells
 
         int start = searchLetters(startString);
-        int end = searchLetters(endString);
-
+        int end = start+len-1;
+        String endString = letters[start+end].toString();
         // left - top
         if (startString.equals("A") && col == 0) {
             cells[end+1][col].NearShip = true;
@@ -348,10 +334,10 @@ public class grid {
         return true;
     }
     public boolean checkValidPlacingNumber(int start, int end, int len){
-        int diff = end - start -1;
+        int diff = end - start;
         if (start<0||start>9 || end <0 || end >9){
             return false;
-        }else return diff == len;
+        }else return true;
     }
 
     public int searchLetters(String s){
