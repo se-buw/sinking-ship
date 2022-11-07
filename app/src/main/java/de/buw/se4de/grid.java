@@ -143,7 +143,7 @@ public class grid {
                         EndInt = StartInt+len-1;
                         if(checkValidPlacingNumber(StartInt,EndInt,len) &&
                                 checkValidPlacement(searchLetters(s),StartInt,searchLetters(s),EndInt)){
-                            changingCellsRow(StartInt,EndInt,s);
+                            changingCellsRow(StartInt,len,s);
                             NotValidShipPos=false;
                         }else{
                             System.out.println("Invalid Number Input, please try again.");
@@ -178,42 +178,40 @@ public class grid {
 
     public void PlacingEnemyShip(){
         for(Integer len : shiplength){
-            int Vert = ThreadLocalRandom.current().nextInt(0, 2);
-            int randCol = ThreadLocalRandom.current().nextInt(0, 10);
+            int Vert = ThreadLocalRandom.current().nextInt(0, 2); //output 0 or 1 to know which direction the ship is facinf
+            int randCol = ThreadLocalRandom.current().nextInt(0, collums-len+1);
             int endCol = randCol+len;
-            int randRow = ThreadLocalRandom.current().nextInt(0, 10);
+            int randRow = ThreadLocalRandom.current().nextInt(0, rows-len+1);
             int endRow = randRow+len;
 
-            boolean condition = false;
-            while(!condition){
-                if (checkIfEndInside(randRow,len) &&
-                        checkValidPlacement(randRow,randCol,endRow,randCol) && Vert == 0){
+            boolean NotValidPlacement = true;
+            while(NotValidPlacement){
+                if (checkValidPlacement(randRow,randCol,endRow,randCol) && Vert == 0){
                     String randRowString = String.valueOf(randRow);
                     changingCellsCol(randRowString,len,randCol);
-                    condition = true;
+                    NotValidPlacement = false;
                 }
 
-                else if(checkIfEndInside(randCol,len) &&
-                        checkValidPlacement(randRow,randCol,randRow,endCol) && Vert == 1){
+                else if(checkValidPlacement(randRow,randCol,randRow,endCol) && Vert == 1){
                     String randRowString = String.valueOf(randRow);
-                    changingCellsRow(randCol, endCol, randRowString);
-                    condition = true;
+                    changingCellsRow(randCol, len, randRowString);
+                    NotValidPlacement = false;
                 }
 
                 else{
                     Vert = ThreadLocalRandom.current().nextInt(0, 2);
-                    randCol = ThreadLocalRandom.current().nextInt(0, 10);
+                    randCol = ThreadLocalRandom.current().nextInt(0, collums-len+1);
                     endCol = randCol+len;
-                    randRow = ThreadLocalRandom.current().nextInt(0, 10);
+                    randRow = ThreadLocalRandom.current().nextInt(0, rows-len+1);
                     endRow = randRow+len;
                 }
             }
         }
-
     }
 
 
-    public void changingCellsRow(int start, int end,String row){
+    public void changingCellsRow(int start,int len, String row){
+        int end = start + len - 1;
         int rowint = searchLetters(row);
         //changing nearShip of nearby cells
         // top - left
@@ -226,7 +224,7 @@ public class grid {
                 cells[rowint + 1][i].NearShip = true;
             }
         }//Top - right
-        else if (row.equals("A") && end == 9) {
+        else if (row.equals("A") && end == rows-1) {
             cells[rowint][start-1].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[rowint][i].hasShip = true;
@@ -252,7 +250,7 @@ public class grid {
                 cells[rowint - 1][i].NearShip = true;
             }
         }//Bottom - right
-        else if(row.equals("J")&& end == 9){
+        else if(row.equals("J")&& end == rows-1){
             cells[rowint][start-1].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[rowint][i].hasShip = true;
@@ -366,11 +364,6 @@ public class grid {
         if (start<0||start>9 || end <0 || end >9){
             return false;
         }else return true;
-    }
-    public boolean checkIfEndInside(int start, int len){
-        int end = start+len;
-        return !(end > 9);
-
     }
 
     public int searchLetters(String s){
