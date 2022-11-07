@@ -30,7 +30,6 @@ public class grid {
         }
     }
 /* TODO:
-*  Implement check for ship placement when ships are nearby
 *  Implement Grid for player
 *  Implement AI placement for ships
 *  Implement AI to play against
@@ -49,21 +48,10 @@ public class grid {
     }
 
     public void playSingleGame(){
-        while (shiplength.size()!=0){
-            PlacingPlayerShip();
-            PrintEnemyGrid();
-        }
-        while (ships.length!=0){
-            PrintEnemyGrid();
 
-            System.out.println("Where do you wish to shoot? Write a letter and then a Number ");
-            String row = scanner.nextLine();
-            int column = scanner.nextInt();
-            shoot(row,column);
-        }
     }
 
-    public void PrintEnemyGrid() {
+    public void PrintPLayerGrid(){
         System.out.println("\n  0 1 2 3 4 5 6 7 8 9  ");
         for(int current_row=0; current_row < this.rows;current_row++) {
             System.out.print(letters[current_row]+"|");
@@ -74,6 +62,31 @@ public class grid {
                     System.out.print("0 ");
                 }//if cell has a ship (testing)
                 else if(current_cell.hasShip){
+                    System.out.print("H ");
+                }//cell was shot but missed ships
+                else if(current_cell.dead){
+                    System.out.print("X ");
+                }//if cell was not touched yet
+                else {
+                    System.out.print("~ ");
+                }
+            }
+            System.out.println("|"+letters[current_row]);
+        }
+        System.out.println("  0 1 2 3 4 5 6 7 8 9  ");
+    }
+    //difference to player grid is only that ships are hidden till shot
+    public void PrintEnemyGrid() {
+        System.out.println("\n  0 1 2 3 4 5 6 7 8 9  ");
+        for(int current_row=0; current_row < this.rows;current_row++) {
+            System.out.print(letters[current_row]+"|");
+            for (int current_col=0; current_col<this.cells[current_row].length;current_col++){
+                cell current_cell = cells[current_row][current_col];
+                //if cell has a shot ship
+                if (checkShip(current_cell)){
+                    System.out.print("0 ");
+                }//if cell has a ship (testing)
+                else if(current_cell.hasShip && current_cell.dead){
                     System.out.print("H ");
                 }//cell was shot but missed ships
                 else if(current_cell.dead){
@@ -165,6 +178,8 @@ public class grid {
                 if(checkValidPlacingNumber(StartInt,EndInt,len)){
                     NotValidShipPos = false;
                     changingCellsRow(StartInt,EndInt,s);
+                }else{
+                    System.out.println("Invalid Number Input, please try again.");
                 }
             }else if (ShipInCol){
                 System.out.println("Please Enter start and end Row");
@@ -176,6 +191,8 @@ public class grid {
                 if (checkValidPlacingNumber(StartStringInt,EndStringInt,len)){
                     NotValidShipPos = false;
                     changingCellsCol(StartString,EndString,c);
+                }else {
+                    System.out.println("Invalid Input, please try again.");
                 }
             }else{
                 System.out.println("Unknown Error please try again");
@@ -339,12 +356,10 @@ public class grid {
     public boolean checkValidPlacingNumber(int start, int end, int len){
         int diff = end - start;
         if (start<0||start>9 || end <0 || end >9){
-            System.out.println("Please enter Numbers between 0 and 9 or Letters between A and J ");
             return false;
         }else if(diff!=len){
             return true;
         }else {
-            System.out.println("Please enter Input in sync with your chosen ship length or Start must be smaller then End");
             return false;
         }
     }

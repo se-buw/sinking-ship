@@ -18,14 +18,14 @@ import org.apache.commons.csv.CSVRecord;
 public class App {
 
 	public static void main(String[] args) {
-		grid first_grid = new grid();
+		GameEngine ge = new GameEngine();
 		//first_grid.cells[0][0].dead = true;
 
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Do you want to play a game? y/n" );
 		String input = scanner.nextLine();
 		if (Objects.equals(input, "y")){
-			first_grid.playSingleGame();
+			ge.standardGame();
 		}
 	}
 }
