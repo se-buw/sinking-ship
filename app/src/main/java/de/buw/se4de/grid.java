@@ -30,7 +30,6 @@ public class grid {
         }
     }
 /* TODO:
-*  Implement Grid for player
 *  Implement AI placement for ships
 *  Implement AI to play against
 * */
@@ -45,10 +44,6 @@ public class grid {
     //checks if cell was shot and has a ship, so it can display the ship
     public boolean checkShip(cell cell){
         return cell.dead && cell.hasShip;
-    }
-
-    public void playSingleGame(){
-
     }
 
     public void PrintPLayerGrid(){
