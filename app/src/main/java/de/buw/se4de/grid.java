@@ -183,6 +183,11 @@ public class grid {
         }
     }
 
+    public void PlacingEnemyShip(){
+
+    }
+
+
     public void changingCellsRow(int start, int end,String row){
         int rowint = searchLetters(row);
         //changing nearShip of nearby cells
@@ -320,6 +325,16 @@ public class grid {
                 cells[i][col+1].NearShip = true;
             }
         }
+    }
+    public boolean checkValidPlacement(int startrow,int startcol, int endrow,int endcol){
+        for (int i = startrow;i<=endrow;i++){
+            for (int j=startcol;j<=endcol;j++){
+                if (cells[i][j].NearShip){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     public boolean checkValidPlacingNumber(int start, int end, int len){
         int diff = end - start;
