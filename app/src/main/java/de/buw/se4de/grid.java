@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class grid {
     int rows;
-    int collums;
+    int columns;
     Ship[] ships;
     cell[][] cells;
     Scanner scanner = new Scanner(System.in);
@@ -17,12 +17,12 @@ public class grid {
 
     public grid(){
         this.rows = 10;
-        this.collums = 10;
+        this.columns = 10;
         this.ships= new Ship[6];
-        this.cells= new cell[rows][collums];
+        this.cells= new cell[rows][columns];
 
         for(int i=0;i<rows;i++){
-            for (int j=0;j<collums;j++){
+            for (int j = 0; j< columns; j++){
                 cells[i][j]= new cell();
             }
         }
@@ -119,10 +119,9 @@ public class grid {
         int StartInt;
         int EndInt;
         String StartString;
-        String EndString;
 
-        String s=" ";   //string for row/column and which row input
-        int c =-1; //integer for which column input
+        String s;   //string for row/column and which row input
+        int c; //integer for which column input
         while (NotValidShipPos){
             System.out.println("Where do you want to place your ship? Row (r) / Column (c)");
             s = scanner.nextLine(); //clearing keyboard input buffer
@@ -141,7 +140,7 @@ public class grid {
                         System.out.println("Please enter a start number.");
                         StartInt = scanner.nextInt();
                         EndInt = StartInt+len-1;
-                        if(checkValidPlacingNumber(StartInt,EndInt,len) &&
+                        if(checkValidPlacingNumber(StartInt,len) &&
                                 checkValidPlacement(searchLetters(s),StartInt,searchLetters(s),EndInt)){
                             changingCellsRow(StartInt,len,s);
                             NotValidShipPos=false;
@@ -165,7 +164,7 @@ public class grid {
 
                         int StartStringInt = searchLetters(StartString);
                         int EndStringInt = StartStringInt+len-1;
-                        if (checkValidPlacingNumber(StartStringInt,EndStringInt,len) &&
+                        if (checkValidPlacingNumber(StartStringInt, len) &&
                                 checkValidPlacement(searchLetters(StartString),c,EndStringInt,c)){
                             changingCellsCol(StartString,len,c);
                             NotValidShipPos =false;
@@ -179,7 +178,7 @@ public class grid {
     public void PlacingEnemyShip(){
         for(Integer len : shiplength){
             int Vert = ThreadLocalRandom.current().nextInt(0, 2); //output 0 or 1 to know which direction the ship is facinf
-            int randCol = ThreadLocalRandom.current().nextInt(0, collums-len+1);
+            int randCol = ThreadLocalRandom.current().nextInt(0, columns -len+1);
             int endCol = randCol+len;
             int randRow = ThreadLocalRandom.current().nextInt(0, rows-len+1);
             int endRow = randRow+len;
@@ -200,7 +199,7 @@ public class grid {
 
                 else{
                     Vert = ThreadLocalRandom.current().nextInt(0, 2);
-                    randCol = ThreadLocalRandom.current().nextInt(0, collums-len+1);
+                    randCol = ThreadLocalRandom.current().nextInt(0, columns -len+1);
                     endCol = randCol+len;
                     randRow = ThreadLocalRandom.current().nextInt(0, rows-len+1);
                     endRow = randRow+len;
@@ -294,7 +293,7 @@ public class grid {
                 cells[i][col+1].NearShip = true;
             }
         }//Top - right
-        else if (startString.equals("A") && col == 9) {
+        else if (startString.equals("A") && col == columns -1) {
             cells[end+1][col].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[i][col].hasShip = true;
@@ -319,7 +318,7 @@ public class grid {
                 cells[i][col+1].NearShip = true;
             }
         }//Bottom - right
-        else if(endString.equals("J") && col == 9){
+        else if(endString.equals("J") && col == columns -1){
             cells[start-1][col].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[i][col].hasShip = true;
@@ -359,11 +358,8 @@ public class grid {
         }
         return true;
     }
-    public boolean checkValidPlacingNumber(int start, int end, int len){
-        int diff = end - start;
-        if (start<0||start>9 || end <0 || end >9){
-            return false;
-        }else return true;
+    public boolean checkValidPlacingNumber(int start,int len){
+        return start >= 0 && start < rows - len - 1;
     }
 
     public int searchLetters(String s){
