@@ -167,7 +167,8 @@ public class grid {
                 System.out.println("Please enter a start and end number.");
                 StartInt = scanner.nextInt();
                 EndInt = scanner.nextInt();
-                if(checkValidPlacingNumber(StartInt,EndInt,len)){
+                if(checkValidPlacingNumber(StartInt,EndInt,len) &&
+                        checkValidPlacement(searchLetters(s),StartInt,searchLetters(s),EndInt)){
                     NotValidShipPos = false;
                     changingCellsRow(StartInt,EndInt,s);
                 }else{
@@ -180,7 +181,8 @@ public class grid {
                 EndString = scanner.nextLine();
                 int StartStringInt = searchLetters(StartString);
                 int EndStringInt = searchLetters(EndString);
-                if (checkValidPlacingNumber(StartStringInt,EndStringInt,len)){
+                if (checkValidPlacingNumber(StartStringInt,EndStringInt,len) &&
+                        checkValidPlacement(searchLetters(StartString),c,searchLetters(EndString),c)){
                     NotValidShipPos = false;
                     changingCellsCol(StartString,EndString,c);
                 }else {
@@ -346,10 +348,10 @@ public class grid {
         return true;
     }
     public boolean checkValidPlacingNumber(int start, int end, int len){
-        int diff = end - start;
+        int diff = end - start -1;
         if (start<0||start>9 || end <0 || end >9){
             return false;
-        }else return diff != len;
+        }else return diff == len;
     }
 
     public int searchLetters(String s){
