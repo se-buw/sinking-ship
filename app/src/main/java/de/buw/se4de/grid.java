@@ -14,7 +14,7 @@ public class grid {
     Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
     ArrayList<Integer> shiplength= new ArrayList<>(Arrays.asList(5,4,4,3,3,2));
 
-
+    //Base of the grid the game is played on, with its ships and cells
     public grid(){
         this.rows = 10;
         this.columns = 10;
@@ -32,9 +32,9 @@ public class grid {
         }
     }
 /* TODO:
-*  Implement AI placement for ships
 *  Implement AI to play against
 * */
+    //Simple shoot function
     public void shoot(String row, int column){
         int rowInt = searchLetters(row);
         if (cells[rowInt][column].hasShip){
@@ -43,12 +43,12 @@ public class grid {
         cells[rowInt][column].dead=true;
     }
 
-    //checks if cell was shot and has a ship, so it can display the ship
+    //Checks if cell was shot and has a ship, so it can display the ship
     public boolean checkShip(cell cell){
         return cell.dead && cell.hasShip;
     }
-
-    public void PrintPLayerGrid(){
+    //Prints player grid with ships seen
+    public void PrintPlayerGrid(){
         System.out.println("\n  0 1 2 3 4 5 6 7 8 9  ");
         for(int current_row=0; current_row < this.rows;current_row++) {
             System.out.print(letters[current_row]+"|");
@@ -72,7 +72,7 @@ public class grid {
         }
         System.out.println("  0 1 2 3 4 5 6 7 8 9  ");
     }
-    //difference to player grid is only that ships are hidden till shot
+    //Prints the enemy grid without their ships seen
     public void PrintEnemyGrid() {
         System.out.println("\n  0 1 2 3 4 5 6 7 8 9  ");
         for(int current_row=0; current_row < this.rows;current_row++) {
@@ -94,7 +94,7 @@ public class grid {
         }
         System.out.println("  0 1 2 3 4 5 6 7 8 9  ");
     }
-    //let the enemy player place one ship
+    //Lets a player place a ship of decidable length
     public void PlacingPlayerShip(){
         //checking which ship to place
         boolean NotValidLength = true;
@@ -123,42 +123,40 @@ public class grid {
         String s;   //string for row/column and which row input
         int c; //integer for which column input
         while (NotValidShipPos){
-            System.out.println("Where do you want to place your ship? Row (r) / Column (c)");
+            System.out.println("Do you want your ship horizontally or vertically? horizontal (h) / vertical (v)");
             s = scanner.nextLine(); //clearing keyboard input buffer
             s = scanner.nextLine();
-            if (s.equals("r")||s.equals("R")){
+            if (s.equals("h")||s.equals("H")){
 
                 boolean NotValidRow = true;
                 while(NotValidRow) {
-                    System.out.println("In which row do you want to place the Ship? Letter");
+                    System.out.println("In which row do you want to place the Ship? Write a letter");
                     s = scanner.nextLine();
                     if (searchLetters(s) == -1) {
                         System.out.println("Please enter valid row.");
                     }else {
                         //input is valid row, now place ship in row
                         NotValidRow = false;
-                        System.out.println("Please enter a start number.");
+                        System.out.println("Which column do you want your ship to start. Write a number");
                         StartInt = scanner.nextInt();
                         EndInt = StartInt+len-1;
                         if(checkValidPlacingNumber(StartInt,len) &&
                                 checkValidPlacement(searchLetters(s),StartInt,searchLetters(s),EndInt)){
                             changingCellsRow(StartInt,len,s);
                             NotValidShipPos=false;
-                        }else{
-                            System.out.println("Invalid Number Input, please try again.");
-                        }
+                        }else{System.out.println("Invalid Number Input, please try again.");}
                     }
                 }
-            }else if (s.equals("c") ||  s.equals("C")){
+            }else if (s.equals("v") ||  s.equals("V")){
 
                 boolean NotValidColumn = true;
                 while (NotValidColumn) {
-                    System.out.println("In which column do you want to place the ship? Number");
+                    System.out.println("In which column do you want to place the ship? Write a number.");
                     c = scanner.nextInt();
                     if (0 <= c && c <= 9) {
                         //input is valid column now placing ship
                         NotValidColumn = false;
-                        System.out.println("Please Enter Row");
+                        System.out.println("Which row do you want your ship to start. Write a letter.");
                         StartString = scanner.nextLine();//clearing keyboard input
                         StartString = scanner.nextLine();
 
@@ -168,16 +166,16 @@ public class grid {
                                 checkValidPlacement(searchLetters(StartString),c,EndStringInt,c)){
                             changingCellsCol(StartString,len,c);
                             NotValidShipPos =false;
-                        }else {System.out.println("Invalid Input, please try again.");}
+                        } else {System.out.println("Invalid Number Input, please try again.");}
                     } else {System.out.println("Please enter valid column.");}
                 }
-            }else {System.out.println("Please enter r for row or c for column");}
+            }else {System.out.println("Please enter h for horizontal or v for vertical.");}
         }
     }
-
+    //Places enemy ships randomly, according to the rules
     public void PlacingEnemyShip(){
         for(Integer len : shiplength){
-            int Vert = ThreadLocalRandom.current().nextInt(0, 2); //output 0 or 1 to know which direction the ship is facinf
+            int Vert = ThreadLocalRandom.current().nextInt(0, 2); //output 0 or 1 to know if the ship is vertical or horizontal
             int randCol = ThreadLocalRandom.current().nextInt(0, columns-len+1);
             int endCol = randCol+len-1;
             int randRow = ThreadLocalRandom.current().nextInt(0, rows-len+1);
@@ -208,7 +206,7 @@ public class grid {
         }
     }
 
-
+    //A function to change the "nearShip" status of cells near ships, in a row
     public void changingCellsRow(int start,int len, String row){
         int end = start + len - 1;
         int rowint = searchLetters(row);
@@ -296,6 +294,7 @@ public class grid {
             }
         }
     }
+    //A function to change the "nearShip" status of cells near ships, in a column
     public void changingCellsCol(String startString, int len, int col){
         //changing nearShip of nearby cells
 
@@ -382,6 +381,7 @@ public class grid {
             }
         }
     }
+    //Checks if the cells between two points have the "nearShip" status, and returns false if yes
     public boolean checkValidPlacement(int startrow, int startcol, int endrow,int endcol){
         for (int i = startrow;i <= endrow;i++){
             for (int j=startcol;j<=endcol;j++){
@@ -392,10 +392,11 @@ public class grid {
         }
         return true;
     }
+    //Checks if input number would exceed the map barriers with given length
     public boolean checkValidPlacingNumber(int start,int len){
         return start >= 0 && start < rows - len - 1;
     }
-
+    //A simple search function to change the letters of the map into their according numbers
     public int searchLetters(String s){
         char c = s.charAt(0);
         for (int i=0;i< letters.length;++i) {
@@ -405,6 +406,7 @@ public class grid {
         }
         return -1;
     }
+    //A ship length checker
     public boolean lengthCheck(int len){
         for (int i : shiplength){
             if(len==i){
@@ -413,7 +415,7 @@ public class grid {
         }
         return false;
     }
-    //print remaining ship lengths
+    //Prints remaining ship lengths
     public void printShipLengths(){
         for (int i=0;i<shiplength.size()-1;i++){
             System.out.print(shiplength.get(i) +", ");

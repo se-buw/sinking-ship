@@ -5,7 +5,7 @@ public class cell{
     boolean hasShip;
     boolean shotShip;
     boolean NearShip;
-
+    //Cell class that the grid is made up of
     public cell(){
         this.dead = false;
         this.hasShip = false;
