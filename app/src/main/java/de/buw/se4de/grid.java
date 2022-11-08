@@ -265,6 +265,24 @@ public class grid {
                 cells[rowint][i].NearShip = true;
                 cells[rowint - 1][i].NearShip = true;
             }
+        }//Left
+        else if (start==0){
+            cells[rowint][end+1].NearShip = true;
+            for (int i = start; i<=end; i++) {
+                cells[rowint][i].hasShip = true;
+                cells[rowint][i].NearShip = true;
+                cells[rowint - 1][i].NearShip = true;
+                cells[rowint + 1][i].NearShip = true;
+            }
+        }//right
+        else if (end == columns-1){
+            cells[rowint][start-1].NearShip = true;
+            for (int i = start; i<=end; i++) {
+                cells[rowint][i].hasShip = true;
+                cells[rowint][i].NearShip = true;
+                cells[rowint - 1][i].NearShip = true;
+                cells[rowint + 1][i].NearShip = true;
+            }
         }//everything else
         else {
             cells[rowint][start-1].NearShip = true;
@@ -326,7 +344,7 @@ public class grid {
                 cells[i][col-1].NearShip = true;
             }
         }//Bottom
-        else if (col == columns -1) {
+        else if (col == columns-1) {
             cells[start-1][col].NearShip = true;
             cells[end+1][col].NearShip = true;
             for (int i = start; i<=end; i++) {
@@ -334,8 +352,25 @@ public class grid {
                 cells[i][col].NearShip = true;
                 cells[i][col-1].NearShip = true;
             }
-        }
-        //everything else
+        }//checking if top
+        else if(startString.equals("A")){
+            cells[end+1][col].NearShip = true;
+            for (int i = start; i<=end; i++) {
+                cells[i][col].hasShip = true;
+                cells[i][col].NearShip = true;
+                cells[i][col-1].NearShip = true;
+                cells[i][col+1].NearShip = true;
+            }
+        }//checking if bottom
+        else if (endString.equals("J")){
+            cells[start-1][col].NearShip = true;
+            for (int i = start; i<=end; i++) {
+                cells[i][col].hasShip = true;
+                cells[i][col].NearShip = true;
+                cells[i][col-1].NearShip = true;
+                cells[i][col+1].NearShip = true;
+            }
+        }//everything else
         else {
             cells[start-1][col].NearShip = true;
             cells[end+1][col].NearShip = true;
