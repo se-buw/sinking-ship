@@ -178,31 +178,31 @@ public class grid {
     public void PlacingEnemyShip(){
         for(Integer len : shiplength){
             int Vert = ThreadLocalRandom.current().nextInt(0, 2); //output 0 or 1 to know which direction the ship is facinf
-            int randCol = ThreadLocalRandom.current().nextInt(0, columns -len+1);
-            int endCol = randCol+len;
+            int randCol = ThreadLocalRandom.current().nextInt(0, columns-len+1);
+            int endCol = randCol+len-1;
             int randRow = ThreadLocalRandom.current().nextInt(0, rows-len+1);
-            int endRow = randRow+len;
+            int endRow = randRow+len-1;
 
             boolean NotValidPlacement = true;
             while(NotValidPlacement){
                 if (checkValidPlacement(randRow,randCol,endRow,randCol) && Vert == 0){
-                    String randRowString = String.valueOf(randRow);
+                    String randRowString = letters[randRow].toString();
                     changingCellsCol(randRowString,len,randCol);
                     NotValidPlacement = false;
                 }
 
                 else if(checkValidPlacement(randRow,randCol,randRow,endCol) && Vert == 1){
-                    String randRowString = String.valueOf(randRow);
+                    String randRowString = letters[randRow].toString();
                     changingCellsRow(randCol, len, randRowString);
                     NotValidPlacement = false;
                 }
 
                 else{
                     Vert = ThreadLocalRandom.current().nextInt(0, 2);
-                    randCol = ThreadLocalRandom.current().nextInt(0, columns -len+1);
-                    endCol = randCol+len;
+                    randCol = ThreadLocalRandom.current().nextInt(0, columns-len+1);
+                    endCol = randCol+len-1;
                     randRow = ThreadLocalRandom.current().nextInt(0, rows-len+1);
-                    endRow = randRow+len;
+                    endRow = randRow+len-1;
                 }
             }
         }
@@ -283,42 +283,42 @@ public class grid {
 
         int start = searchLetters(startString);
         int end = start+len-1;
-        String endString = letters[start+end].toString();
+        String endString = letters[end].toString();
         // left - top
-        if (startString.equals("A") && col == 0) {
+        if (col == 0 && startString.equals("A")) {
             cells[end+1][col].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[i][col].hasShip = true;
                 cells[i][col].NearShip = true;
                 cells[i][col+1].NearShip = true;
             }
-        }//Top - right
-        else if (startString.equals("A") && col == columns -1) {
-            cells[end+1][col].NearShip = true;
-            for (int i = start; i<=end; i++) {
-                cells[i][col].hasShip = true;
-                cells[i][col].NearShip = true;
-                cells[i][col-1].NearShip = true;
-            }
-        }//only Top
-        else if (startString.equals("A")) {
-            cells[end+1][col].NearShip = true;
-            for (int i = start; i<=end; i++) {
-                cells[i][col].hasShip = true;
-                cells[i][col].NearShip = true;
-                cells[i][col+1].NearShip = true;
-                cells[i][col-1].NearShip = true;
-            }
-        }//Bottom - left
-        else if (endString.equals("J") && col == 0 ) {
+        }//left - bottom
+        else if (col == 0 && endString.equals("J")) {
             cells[start-1][col].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[i][col].hasShip = true;
                 cells[i][col].NearShip = true;
                 cells[i][col+1].NearShip = true;
             }
-        }//Bottom - right
-        else if(endString.equals("J") && col == columns -1){
+        }//only left
+        else if (col==0) {
+            cells[start-1][col].NearShip = true;
+            cells[end+1][col].NearShip = true;
+            for (int i = start; i<=end; i++) {
+                cells[i][col].hasShip = true;
+                cells[i][col].NearShip = true;
+                cells[i][col+1].NearShip = true;
+            }
+        }//right - top
+        else if (col == columns -1 && startString.equals("A")) {
+            cells[end+1][col].NearShip = true;
+            for (int i = start; i<=end; i++) {
+                cells[i][col].hasShip = true;
+                cells[i][col].NearShip = true;
+                cells[i][col-1].NearShip = true;
+            }
+        } //right - bottom
+        else if(col == columns-1 && endString.equals("J")){
             cells[start-1][col].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[i][col].hasShip = true;
@@ -326,20 +326,19 @@ public class grid {
                 cells[i][col-1].NearShip = true;
             }
         }//Bottom
-        else if (endString.equals("J")) {
+        else if (col == columns -1) {
             cells[start-1][col].NearShip = true;
+            cells[end+1][col].NearShip = true;
             for (int i = start; i<=end; i++) {
                 cells[i][col].hasShip = true;
                 cells[i][col].NearShip = true;
                 cells[i][col-1].NearShip = true;
-                cells[i][col+1].NearShip = true;
             }
         }
         //everything else
         else {
             cells[start-1][col].NearShip = true;
             cells[end+1][col].NearShip = true;
-
             for (int i = start; i<=end; i++) {
                 cells[i][col].hasShip = true;
                 cells[i][col].NearShip = true;
@@ -348,8 +347,8 @@ public class grid {
             }
         }
     }
-    public boolean checkValidPlacement(int startrow,int startcol, int endrow,int endcol){
-        for (int i = startrow;i<=endrow;i++){
+    public boolean checkValidPlacement(int startrow, int startcol, int endrow,int endcol){
+        for (int i = startrow;i <= endrow;i++){
             for (int j=startcol;j<=endcol;j++){
                 if (cells[i][j].NearShip){
                     return false;
