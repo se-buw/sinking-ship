@@ -11,6 +11,7 @@ public class grid {
     int columns;
     Ship[] ships;
     cell[][] cells;
+    ArrayList<cell> alreadyShot;
     Scanner scanner = new Scanner(System.in);
     Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
     ArrayList<Integer> shiplength = new ArrayList<>(Arrays.asList(5,4,4,3,3,2));
@@ -26,6 +27,8 @@ public class grid {
         for(int i=0;i<rows;i++){
             for (int j = 0; j< columns; j++){
                 cells[i][j]= new cell();
+                cells[i][j].x = i;
+                cells[i][j].y = j;
             }
         }
 
@@ -67,7 +70,21 @@ public class grid {
                 }
                 //marking cell as shot
                 cells[randRow][randCol].dead = false;
+                alreadyShot.add(cells[randRow][randCol]);
                 NotValidShot = false;
+            }
+        }
+    }
+    public void aiSimpleShotCalc(){
+        Random rand = new Random();
+        int hitChance = aliveCells;
+        int roll = rand.nextInt(columns*rows);
+        //if roll <= hitChance enemy hits a ship
+        if (roll<=hitChance){
+            if(alreadyShot.size()==0){
+                randomShoot();
+            }else if (alreadyShot.get(alreadyShot.size()-1).shotShip){
+                //go around the cell and kill ship
             }
         }
     }
