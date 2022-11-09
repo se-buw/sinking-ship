@@ -1,6 +1,8 @@
 package de.buw.se4de;
 
 public class cell{
+    int x;
+    int y;
     boolean dead;
     boolean hasShip;
     boolean shotShip;
