@@ -2,6 +2,7 @@ package de.buw.se4de;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -48,11 +49,30 @@ public class grid {
         }
         cells[rowInt][column].dead=true;
     }
+    public void randomShoot(){
+        Random rand = new Random();
+        boolean NotValidShot= true;
 
-    //Checks if cell was shot and has a ship, so it can display the ship
-    public boolean checkShip(cell cell){
-        return cell.dead && cell.hasShip;
+        while (NotValidShot) {
+            //get random cords
+            char randRow = letters[rand.nextInt(letters.length)];
+            int randCol = rand.nextInt(10);
+
+            //check if cords already got shot
+            if (!cells[randRow][randCol].dead){
+                //check if cell has a ship
+                if (cells[randRow][randCol].hasShip){
+                    cells[randRow][randCol].shotShip = true;
+                    --aliveCells;
+                }
+                //marking cell as shot
+                cells[randRow][randCol].dead = false;
+                NotValidShot = false;
+            }
+        }
     }
+
+
     //Prints player grid with ships seen
     public void PrintPlayerGrid(){
         System.out.println("\n  0 1 2 3 4 5 6 7 8 9  ");
@@ -401,6 +421,10 @@ public class grid {
     //Checks if input number would exceed the map barriers with given length
     public boolean checkValidPlacingNumber(int start,int len){
         return start >= 0 && start < rows - len - 1;
+    }
+    //Checks if cell was shot and has a ship, so it can display the ship
+    public boolean checkShip(cell cell){
+        return cell.dead && cell.hasShip;
     }
     //A simple search function to change the letters of the map into their according numbers
     public int searchLetters(String s){
