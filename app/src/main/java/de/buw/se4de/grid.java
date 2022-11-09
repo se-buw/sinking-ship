@@ -12,7 +12,8 @@ public class grid {
     cell[][] cells;
     Scanner scanner = new Scanner(System.in);
     Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
-    ArrayList<Integer> shiplength= new ArrayList<>(Arrays.asList(5,4,4,3,3,2));
+    ArrayList<Integer> shiplength = new ArrayList<>(Arrays.asList(5,4,4,3,3,2));
+    int aliveCells = 21;
 
     //Base of the grid the game is played on, with its ships and cells
     public grid(){
@@ -39,6 +40,7 @@ public class grid {
         int rowInt = searchLetters(row);
         if (cells[rowInt][column].hasShip){
             cells[rowInt][column].shotShip=true;
+            --aliveCells;
         }
         cells[rowInt][column].dead=true;
     }
@@ -94,7 +96,7 @@ public class grid {
         }
         System.out.println("  0 1 2 3 4 5 6 7 8 9  ");
     }
-    //Lets a player place a ship of decidable length
+    //Lets a player place all ships, all with decidable length
     public void PlacingPlayerShip(){
         //checking which ship to place
         boolean NotValidLength = true;
@@ -144,7 +146,7 @@ public class grid {
                                 checkValidPlacement(searchLetters(s),StartInt,searchLetters(s),EndInt)){
                             changingCellsRow(StartInt,len,s);
                             NotValidShipPos=false;
-                        }else{System.out.println("Invalid Number Input, please try again.");}
+                        }else{System.out.println("Not viable input.");}
                     }
                 }
             }else if (s.equals("v") ||  s.equals("V")){
@@ -166,7 +168,7 @@ public class grid {
                                 checkValidPlacement(searchLetters(StartString),c,EndStringInt,c)){
                             changingCellsCol(StartString,len,c);
                             NotValidShipPos =false;
-                        } else {System.out.println("Invalid Number Input, please try again.");}
+                        } else {System.out.println("Not viable input.");}
                     } else {System.out.println("Please enter valid column.");}
                 }
             }else {System.out.println("Please enter h for horizontal or v for vertical.");}
