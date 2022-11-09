@@ -13,7 +13,7 @@ public class grid {
     Scanner scanner = new Scanner(System.in);
     Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
     ArrayList<Integer> shiplength = new ArrayList<>(Arrays.asList(5,4,4,3,3,2));
-    int aliveCells = 21;
+    int aliveCells;
 
     //Base of the grid the game is played on, with its ships and cells
     public grid(){
@@ -30,6 +30,10 @@ public class grid {
 
         for (int i =0;i< ships.length;i++){
             ships[i]=new Ship();
+        }
+
+        for (int i: shiplength){
+            aliveCells+=i;
         }
     }
 /* TODO:

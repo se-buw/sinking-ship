@@ -14,10 +14,10 @@ public class GameEngine {
         Scanner scanner = new Scanner(System.in);
         //Begin input
         PlayerGrid.PrintPlayerGrid();
-        /*while (PlayerGrid.shiplength.size()!=0){
+        while (PlayerGrid.shiplength.size()!=0){
             PlayerGrid.PlacingPlayerShip();
             PlayerGrid.PrintPlayerGrid();
-        }*/
+        }
 
         EnemyGrid.PlacingEnemyShip();
 
