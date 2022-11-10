@@ -11,7 +11,7 @@ public class grid {
     int columns;
     Ship[] ships;
     cell[][] cells;
-    ArrayList<cell> alreadyShot;
+    ArrayList<cell> alreadyShot = new ArrayList<cell>();
     Scanner scanner = new Scanner(System.in);
     Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
     ArrayList<Integer> shiplength = new ArrayList<>(Arrays.asList(5,4,4,3,3,2));
@@ -56,6 +56,7 @@ public class grid {
         }
         cells[rowInt][column].dead=true;
     }
+    //just shoots on a random cell
     public int[] randomShoot(){
         Random rand = new Random();
         boolean NotValidShot= true;
@@ -82,38 +83,8 @@ public class grid {
         }
         return new int[]{randRow,randCol};
     }
-    public void aiSimpleShotCalc(){
-        Random rand = new Random();
-        int hitChance = aliveCells;
-        int roll = rand.nextInt(columns*rows);
-        //if roll <= hitChance enemy hits a ship
-        if (roll<=hitChance){
-            if(alreadyShot.size()==0){
-                //basically random shoot but always hit a ship
-                boolean NotValidShot= true;
 
-                while (NotValidShot) {
-                    //get random cords
-                    char randRow = letters[rand.nextInt(letters.length)];
-                    int randCol = rand.nextInt(columns);
-                    //check if cords already got shot and cell has a ship
-                    if (!cells[randRow][randCol].dead && cells[randRow][randCol].hasShip){
-                            cells[randRow][randCol].dead = false;
-                            alreadyShot.add(cells[randRow][randCol]);
-                            NotValidShot = false;
-                    }
-                }
-            }// go to the last shot ship and further shoot it
-            else {
-                //go around the cell and kill ship
-            }
-        }//shot misses
-        else{
-            //LAST SHOT WAS ON A SHIP
 
-            //LAST SHOT WAS NOT ON SHIP
-        }
-    }
     //---------------------------------------------------------------------------------
     //Methods of visualizing and placing player and enemy ships
     //---------------------------------------------------------------------------------
@@ -536,6 +507,7 @@ public class grid {
         }
         System.out.println(shiplength.get(shiplength.size()-1));
     }
+
     //---------------------------------------------------------------------------------
     /*
     The reasoning to putting a big amount of our code in the grid class, is because it is the central point of the game

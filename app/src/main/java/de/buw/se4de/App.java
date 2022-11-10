@@ -22,10 +22,21 @@ public class App {
 		GameEngine ge = new GameEngine();
 
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("Do you want to play a game? y/n" );
+		System.out.println("Which game mode do you want to play?" );
+		System.out.println("Default (d)");
+		System.out.println("unfair Game (u)");
 		String input = scanner.nextLine();
-		if (Objects.equals(input, "y")){
-			ge.standardGame();
+		//switch statement for future game modes
+		switch (input) {
+			case "d" -> ge.standardGame();
+			case "u" -> ge.unfairGame();
+			case "upupdowndownleftrightleftrightBA"->{
+				ge.victory();
+			}
+			default -> {
+				System.out.println("Looks like you don't want to play. (╥︵╥) ");
+				System.out.println("cya next time.");
+			}
 		}
 	}
 }
