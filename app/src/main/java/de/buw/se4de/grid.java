@@ -37,10 +37,11 @@ public class grid {
             ships[i]=new Ship();
             ships[i].len = shiplength.get(i);
         }
-
+        this.aliveCells = 0;
         for (int i: shiplength){
-            aliveCells+=i;
+            this.aliveCells+=i;
         }
+
     }
 
     //Methods of player shooting, and AI shooting
@@ -48,21 +49,24 @@ public class grid {
     //Simple shoot function
     public void shoot(String row, int column){
         int rowInt = searchLetters(row);
-        if (cells[rowInt][column].hasShip){
+        //checking if cell has ship and was not shot yet
+        if (cells[rowInt][column].hasShip&&!cells[rowInt][column].dead){
             cells[rowInt][column].shotShip=true;
-            --aliveCells;
+            aliveCells--;
         }
         cells[rowInt][column].dead=true;
     }
-    public void randomShoot(){
+    public int[] randomShoot(){
         Random rand = new Random();
         boolean NotValidShot= true;
 
-        while (NotValidShot) {
-            //get random cords
-            char randRow = letters[rand.nextInt(letters.length)];
-            int randCol = rand.nextInt(10);
+        //get random cords
+        int randRow=-1;
+        int randCol=-1;
 
+        while (NotValidShot) {
+            randRow = rand.nextInt(rows);
+            randCol = rand.nextInt(columns);
             //check if cords already got shot
             if (!cells[randRow][randCol].dead){
                 //check if cell has a ship
@@ -71,11 +75,12 @@ public class grid {
                     --aliveCells;
                 }
                 //marking cell as shot
-                cells[randRow][randCol].dead = false;
-                alreadyShot.add(cells[randRow][randCol]);
+                cells[randRow][randCol].dead = true;
                 NotValidShot = false;
             }
+
         }
+        return new int[]{randRow,randCol};
     }
     public void aiSimpleShotCalc(){
         Random rand = new Random();
@@ -84,10 +89,29 @@ public class grid {
         //if roll <= hitChance enemy hits a ship
         if (roll<=hitChance){
             if(alreadyShot.size()==0){
-                randomShoot();
-            }else if (alreadyShot.get(alreadyShot.size()-1).shotShip){
+                //basically random shoot but always hit a ship
+                boolean NotValidShot= true;
+
+                while (NotValidShot) {
+                    //get random cords
+                    char randRow = letters[rand.nextInt(letters.length)];
+                    int randCol = rand.nextInt(columns);
+                    //check if cords already got shot and cell has a ship
+                    if (!cells[randRow][randCol].dead && cells[randRow][randCol].hasShip){
+                            cells[randRow][randCol].dead = false;
+                            alreadyShot.add(cells[randRow][randCol]);
+                            NotValidShot = false;
+                    }
+                }
+            }// go to the last shot ship and further shoot it
+            else {
                 //go around the cell and kill ship
             }
+        }//shot misses
+        else{
+            //LAST SHOT WAS ON A SHIP
+
+            //LAST SHOT WAS NOT ON SHIP
         }
     }
     //---------------------------------------------------------------------------------
@@ -102,7 +126,7 @@ public class grid {
                 cell current_cell = cells[current_row][current_col];
                 //if cell has a shot ship
                 if (checkShip(current_cell)){
-                    System.out.print("0 ");
+                    System.out.print("Z ");
                 }//if cell has a ship that was not shot
                 else if(current_cell.hasShip){
                     System.out.print("H ");
@@ -275,9 +299,11 @@ public class grid {
             }
         }
     }
+
     //---------------------------------------------------------------------------------
     //Helper functions
     //---------------------------------------------------------------------------------
+
     //A function to change the "nearShip" status of cells near ships, in a row
     public void changingCellsRow(int start,int len, String row){
         int end = start + len - 1;
