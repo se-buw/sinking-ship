@@ -8,6 +8,7 @@ public class Ship {
     boolean isSunk;
     boolean isVert;
 
+    //Ship class thats is put on the grid
     public Ship(){
         this.len=0;
         this.BowColStart=-1;

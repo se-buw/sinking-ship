@@ -18,7 +18,7 @@ public class grid {
     int shipAmount = shiplength.size();
     int aliveCells;
 
-    //Base of the grid the game is played on, with its ships and cells
+    //Constructor of the grid the game is played on, with its ships and cells
     public grid(){
         this.rows = 10;
         this.columns = 10;
@@ -42,9 +42,9 @@ public class grid {
             aliveCells+=i;
         }
     }
-/* TODO:
-*  Implement AI to play against
-* */
+
+    //Methods of player shooting, and AI shooting
+    //---------------------------------------------------------------------------------
     //Simple shoot function
     public void shoot(String row, int column){
         int rowInt = searchLetters(row);
@@ -90,8 +90,9 @@ public class grid {
             }
         }
     }
-
-
+    //---------------------------------------------------------------------------------
+    //Methods of visualizing and placing player and enemy ships
+    //---------------------------------------------------------------------------------
     //Prints player grid with ships seen
     public void PrintPlayerGrid(){
         System.out.println("\n  0 1 2 3 4 5 6 7 8 9  ");
@@ -274,7 +275,9 @@ public class grid {
             }
         }
     }
-
+    //---------------------------------------------------------------------------------
+    //Helper functions
+    //---------------------------------------------------------------------------------
     //A function to change the "nearShip" status of cells near ships, in a row
     public void changingCellsRow(int start,int len, String row){
         int end = start + len - 1;
@@ -461,9 +464,9 @@ public class grid {
         }
         return true;
     }
-    //Checks if input number would exceed the map barriers with given length
+    //Checks if input number would exceed the map barriers with given ship length
     public boolean checkValidPlacingNumber(int start,int len){
-        return start >= 0 && start < rows - len - 1;
+        return start >= 0 && start < rows - len + 1;
     }
     //Checks if cell was shot and has a ship, so it can display the ship
     public boolean checkShip(cell cell){
@@ -479,7 +482,7 @@ public class grid {
         }
         return -1;
     }
-    //finding correct ship
+    //Search function to find correct ship in the grids "ships" array
     public Ship findShip(int len){
         Ship def = new Ship();
         for (Ship s: ships){
@@ -507,4 +510,9 @@ public class grid {
         }
         System.out.println(shiplength.get(shiplength.size()-1));
     }
+    //---------------------------------------------------------------------------------
+    /*
+    The reasoning to putting a big amount of our code in the grid class, is because it is the central point of the game
+    and makes it way easier for us to code it in here, than to overcomplicate every other class with a grid parameter.
+     */
 }

@@ -65,10 +65,10 @@ public class GameEngine {
                 else{System.out.println("Invalid input.");}
             }
         }
-        if(PlayerGrid.aliveCells!=0){System.out.println("Cool, you have won :3");}
+        if(PlayerGrid.aliveCells!=0){victory();}
         if(EnemyGrid.aliveCells!=0){System.out.println("Oh no, you havent not wontnt :(");}
     }
-
+    //A helper function to check if a string input equals any of the numbers in the "numbers" array
     public boolean searchNumbers(String s){
         for (int i=0;i< numbers.length;++i) {
             if (s.equals(numbers[i])){
@@ -77,7 +77,7 @@ public class GameEngine {
         }
         return false;
     }
-
+    //A victory screen
     public void victory(){
         System.out.println("VVVVVVVV           VVVVVVVVIIIIIIIIII      CCCCCCCCCCCCCTTTTTTTTTTTTTTTTTTTTTTT     OOOOOOOOO     RRRRRRRRRRRRRRRRR   YYYYYYY       YYYYYYY !!!");
         System.out.println("V::::::V           V::::::VI::::::::I   CCC::::::::::::CT:::::::::::::::::::::T   OO:::::::::OO   R::::::::::::::::R  Y:::::Y       Y:::::Y!!:!!");
