@@ -15,6 +15,7 @@ public class grid {
     Scanner scanner = new Scanner(System.in);
     Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
     ArrayList<Integer> shiplength = new ArrayList<>(Arrays.asList(5,4,4,3,3,2));
+    int shipAmount = shiplength.size();
     int aliveCells;
 
     //Base of the grid the game is played on, with its ships and cells
@@ -34,6 +35,7 @@ public class grid {
 
         for (int i =0;i< ships.length;i++){
             ships[i]=new Ship();
+            ships[i].len = shiplength.get(i);
         }
 
         for (int i: shiplength){
@@ -187,6 +189,13 @@ public class grid {
                                 checkValidPlacement(searchLetters(s),StartInt,searchLetters(s),EndInt)){
                             changingCellsRow(StartInt,len,s);
                             NotValidShipPos=false;
+
+                            //initialising the ship
+                            Ship ship = findShip(len);
+                            ship.BowColStart = StartInt;
+                            ship.BowRowStart = searchLetters(s);
+                            ship.isVert = false;
+
                         }else{System.out.println("Not viable input.");}
                     }
                 }
@@ -209,6 +218,13 @@ public class grid {
                                 checkValidPlacement(searchLetters(StartString),c,EndStringInt,c)){
                             changingCellsCol(StartString,len,c);
                             NotValidShipPos =false;
+
+                            //initialising the ship
+                            Ship ship = findShip(len);
+                            ship.BowColStart = c;
+                            ship.BowRowStart = searchLetters(StartString);
+                            ship.isVert = true;
+
                         } else {System.out.println("Not viable input.");}
                     } else {System.out.println("Please enter valid column.");}
                 }
@@ -230,12 +246,22 @@ public class grid {
                     String randRowString = letters[randRow].toString();
                     changingCellsCol(randRowString,len,randCol);
                     NotValidPlacement = false;
+
+                    Ship ship = findShip(len);
+                    ship.BowColStart = randCol;
+                    ship.BowRowStart = searchLetters(randRowString);
+                    ship.isVert = true;
                 }
 
                 else if(checkValidPlacement(randRow,randCol,randRow,endCol) && Vert == 1){
                     String randRowString = letters[randRow].toString();
                     changingCellsRow(randCol, len, randRowString);
                     NotValidPlacement = false;
+
+                    Ship ship = findShip(len);
+                    ship.BowColStart = randCol;
+                    ship.BowRowStart = searchLetters(randRowString);
+                    ship.isVert = false;
                 }
 
                 else{
@@ -452,6 +478,18 @@ public class grid {
             }
         }
         return -1;
+    }
+    //finding correct ship
+    public Ship findShip(int len){
+        Ship def = new Ship();
+        for (Ship s: ships){
+            //checking if ship has correct len and ist still default
+            if (s.len==len && s.BowColStart ==-1){
+                return s;
+            }
+        }
+        //returning default ship else - should not happen;
+        return def;
     }
     //A ship length checker
     public boolean lengthCheck(int len){
