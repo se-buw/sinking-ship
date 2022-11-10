@@ -30,6 +30,7 @@ public class GameEngine {
 
                 String first = "";
                 int helpInt = 0;
+                int helpIntHit = 0;
                 String second = "";
 
 
@@ -45,16 +46,18 @@ public class GameEngine {
                 else if(searchNumbers(first)){
                     if(second.matches("[ABCDEFGHIJ]")){
                         helpInt = Integer.parseInt(first);
+                        helpIntHit = Integer.parseInt(second);
                         EnemyGrid.shoot(second,helpInt);
-                        --shots;
+                        if(EnemyGrid.cells[helpIntHit][helpInt].hasShip){--shots;}
                     }
                 }
 
                 else if(searchNumbers(second)){
                     if(first.matches("[ABCDEFGHIJ]")){
                         helpInt = Integer.parseInt(second);
+                        helpIntHit = Integer.parseInt(first);
                         EnemyGrid.shoot(first,helpInt);
-                        --shots;
+                        if(EnemyGrid.cells[helpIntHit][helpInt].hasShip){--shots;}
                     }
                 }
 
