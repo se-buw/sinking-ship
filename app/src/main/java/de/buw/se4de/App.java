@@ -3,12 +3,13 @@
  */
 package de.buw.se4de;
 
+import java.nio.*;
+
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
-import java.nio.*;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -51,7 +52,7 @@ public class App {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
 		// Create the window
-		window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
+		window = glfwCreateWindow(1280, 720, "Hello World!", NULL, NULL);
 		if ( window == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
 
@@ -97,14 +98,44 @@ public class App {
 		// bindings available for use.
 		GL.createCapabilities();
 
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+
+		FloatBuffer pos = BufferUtils.createFloatBuffer(4);
+		pos.put(0, 0.0f);
+        pos.put(1, 5.0f);
+        pos.put(2, 0.0f);
+        pos.put(3, 0.0f);
+		FloatBuffer col = BufferUtils.createFloatBuffer(4);
+		col.put(0, 0.8f);
+        col.put(1, 0.8f);
+        col.put(2, 0.8f);
+        col.put(3, 1.0f);
+		glLightfv(GL_LIGHT0, GL_POSITION, pos);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, col);
+
 		// Set the clear color
-		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+		Model m = new Model();
+		m.loadModel("text");
+
+		Camera cam = new Camera();
+		cam.pos_x = -3.0f;
+		cam.pos_z = 1.0f;
+		cam.pos_y = 3.0f;
+		cam.look_x = 0.0f;
+		cam.look_z = 0.0f;
+		cam.look_y = 0.0f;
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		while ( !glfwWindowShouldClose(window) ) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+			m.draw(cam);
+			
 			glfwSwapBuffers(window); // swap the color buffers
 
 			// Poll for window events. The key callback above will only be
