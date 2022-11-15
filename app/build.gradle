@@ -11,6 +11,23 @@ plugins {
     id 'application'
 }
 
+import org.gradle.internal.os.OperatingSystem
+
+project.ext.lwjglVersion = "3.2.3"
+
+switch (OperatingSystem.current()) {
+	case OperatingSystem.LINUX:
+		project.ext.lwjglNatives = "natives-linux"
+		break
+	case OperatingSystem.MAC_OS:
+		project.ext.lwjglNatives = "natives-macos"
+        applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
+		break
+	case OperatingSystem.WINDOWS:
+		project.ext.lwjglNatives = "natives-windows"
+		break
+}
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
@@ -26,6 +43,22 @@ dependencies {
     // working with CSV files
     // https://github.com/eugenp/tutorials/tree/master/libraries-apache-commons-io
     implementation 'org.apache.commons:commons-csv:1.9.0'
+
+    // OpenGL stuff
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
+	implementation "org.lwjgl:lwjgl"
+	implementation "org.lwjgl:lwjgl-assimp"
+	implementation "org.lwjgl:lwjgl-glfw"
+	implementation "org.lwjgl:lwjgl-openal"
+	implementation "org.lwjgl:lwjgl-opengl"
+	implementation "org.lwjgl:lwjgl-stb"
+	runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
 }
 
 application {
