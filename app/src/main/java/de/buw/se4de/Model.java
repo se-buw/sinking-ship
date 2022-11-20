@@ -35,7 +35,7 @@ public class Model {
         glLoadMatrixf(projMatrix.get(fb));
 
         // Set lookat view matrix
-        viewMatrix.setLookAt(cam.pos_x, cam.pos_y, cam.pos_z, cam.look_x, cam.look_y, cam.look_z, 0.0f, 1.0f, 0.0f);
+        viewMatrix.setLookAt(cam.pos.x, cam.pos.y, cam.pos.z, cam.look_at.x, cam.look_at.y, cam.look_at.z, 0.0f, 1.0f, 0.0f);
         glMatrixMode(GL_MODELVIEW);
 
         modelMatrix.translation(0.0f, 0.0f, 0.0f);

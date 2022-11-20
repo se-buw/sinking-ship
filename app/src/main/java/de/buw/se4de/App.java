@@ -22,6 +22,35 @@ public class App {
 	// The window handle
 	private long window;
 
+	/**
+     * System time since last loop.
+     */
+    private double lastLoopTime;
+    /**
+     * Used for FPS and UPS calculation.
+     */
+    private float timeCount;
+
+	private double lastX = 0.0;
+	private double lastY = 0.0;
+
+	public double getTime() {
+        return glfwGetTime();
+    }
+
+    /**
+     * Returns the time that have passed since the last loop.
+     *
+     * @return Delta time in seconds
+     */
+    public float getDelta() {
+        double time = getTime();
+        float delta = (float) (time - lastLoopTime);
+        lastLoopTime = time;
+        timeCount += delta;
+        return delta;
+    }
+
 	public void run() {
 		System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
@@ -98,6 +127,23 @@ public class App {
 		// bindings available for use.
 		GL.createCapabilities();
 
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+		Player player = new Player();
+
+		GLFWCursorPosCallback cursorPosCallback = new GLFWCursorPosCallback() {
+			@Override
+			public void invoke(long window, double xpos, double ypos) {
+				float xoffset = (float) (xpos - lastX);
+				float yoffset = (float) (lastY - ypos);
+				lastX = xpos;
+				lastY = ypos;
+
+				player.process_mouse(xoffset, yoffset);
+			}
+		};
+		glfwSetCursorPosCallback(window, cursorPosCallback);
+
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
@@ -121,20 +167,15 @@ public class App {
 		Model m = new Model();
 		m.loadModel("text");
 
-		Camera cam = new Camera();
-		cam.pos_x = 0.0f;
-		cam.pos_y = 3.0f;
-		cam.pos_z = 3.0f;
-		cam.look_x = 0.0f;
-		cam.look_y = 0.0f;
-		cam.look_z = 0.0f;
+		lastLoopTime = getTime();
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		while ( !glfwWindowShouldClose(window) ) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-			m.draw(cam);
+			player.process_input(window, getDelta());
+			m.draw(player.get_cam());
 			
 			glfwSwapBuffers(window); // swap the color buffers
 

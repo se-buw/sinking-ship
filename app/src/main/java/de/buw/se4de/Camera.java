@@ -1,11 +1,9 @@
 package de.buw.se4de;
 
-public class Camera {
-    float pos_x;
-    float pos_y;
-    float pos_z;
+import org.joml.Vector3f;
 
-    float look_x;
-    float look_y;
-    float look_z;
+public class Camera {
+    Vector3f pos = new Vector3f();
+    Vector3f front = new Vector3f();
+    Vector3f look_at = new Vector3f();
 }
