@@ -52,10 +52,10 @@ public class OBJReader {
                         int v2_uv_off = (Integer.parseInt(vertex2[1])-1)*2;
                         int v2_norm_off = (Integer.parseInt(vertex2[2])-1)*3;
 
-                        Vertex v0 = new Vertex(); v0.pos_x = positions.get(v0_pos_off); v0.pos_y = positions.get(v0_pos_off+1); v0.pos_z = positions.get(v0_pos_off+2); v0.norm_x = positions.get(v0_norm_off); v0.norm_y = positions.get(v0_norm_off+1); v0.norm_z = positions.get(v0_norm_off+2); v0.u = positions.get(v0_uv_off); v0.v = positions.get(v0_uv_off+1);
-                        Vertex v1 = new Vertex(); v1.pos_x = positions.get(v1_pos_off); v1.pos_y = positions.get(v1_pos_off+1); v1.pos_z = positions.get(v1_pos_off+2); v1.norm_x = positions.get(v1_norm_off); v1.norm_y = positions.get(v1_norm_off+1); v1.norm_z = positions.get(v1_norm_off+2); v1.u = positions.get(v1_uv_off); v1.v = positions.get(v1_uv_off+1);
-                        Vertex v2 = new Vertex(); v2.pos_x = positions.get(v2_pos_off); v2.pos_y = positions.get(v2_pos_off+1); v2.pos_z = positions.get(v2_pos_off+2); v2.norm_x = positions.get(v2_norm_off); v2.norm_y = positions.get(v2_norm_off+1); v2.norm_z = positions.get(v2_norm_off+2); v2.u = positions.get(v2_uv_off); v2.v = positions.get(v2_uv_off+1);
-                        
+                        Vertex v0 = new Vertex(); v0.pos_x = positions.get(v0_pos_off); v0.pos_y = positions.get(v0_pos_off+1); v0.pos_z = positions.get(v0_pos_off+2); v0.norm_x = normals.get(v0_norm_off); v0.norm_y = normals.get(v0_norm_off+1); v0.norm_z = normals.get(v0_norm_off+2); v0.u = uvs.get(v0_uv_off); v0.v = uvs.get(v0_uv_off+1);
+                        Vertex v1 = new Vertex(); v1.pos_x = positions.get(v1_pos_off); v1.pos_y = positions.get(v1_pos_off+1); v1.pos_z = positions.get(v1_pos_off+2); v1.norm_x = normals.get(v1_norm_off); v1.norm_y = normals.get(v1_norm_off+1); v1.norm_z = normals.get(v1_norm_off+2); v1.u = uvs.get(v1_uv_off); v1.v = uvs.get(v1_uv_off+1);
+                        Vertex v2 = new Vertex(); v2.pos_x = positions.get(v2_pos_off); v2.pos_y = positions.get(v2_pos_off+1); v2.pos_z = positions.get(v2_pos_off+2); v2.norm_x = normals.get(v2_norm_off); v2.norm_y = normals.get(v2_norm_off+1); v2.norm_z = normals.get(v2_norm_off+2); v2.u = uvs.get(v2_uv_off); v2.v = uvs.get(v2_uv_off+1);
+
                         Triangle t = new Triangle();
                         t.v0 = v0; t.v1 = v1; t.v2 = v2;
 

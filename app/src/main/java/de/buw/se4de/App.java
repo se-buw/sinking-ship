@@ -122,12 +122,12 @@ public class App {
 		m.loadModel("text");
 
 		Camera cam = new Camera();
-		cam.pos_x = -3.0f;
-		cam.pos_z = 1.0f;
+		cam.pos_x = 0.0f;
 		cam.pos_y = 3.0f;
+		cam.pos_z = 3.0f;
 		cam.look_x = 0.0f;
-		cam.look_z = 0.0f;
 		cam.look_y = 0.0f;
+		cam.look_z = 0.0f;
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.

@@ -26,6 +26,8 @@ public class Model {
 
     void draw(Camera cam) {
 
+        glShadeModel(GL_FLAT);
+
         // Build the projection matrix. Watch out here for integer division
         // when computing the aspect ratio!
         projMatrix.setPerspective((float) Math.toRadians(40), 1280.0f / 720.0f, 0.01f, 100.0f);
