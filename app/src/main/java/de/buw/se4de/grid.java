@@ -98,7 +98,7 @@ public class grid {
                 if (!(i % 10 == 0) && field[i - 1] == 0) {
                     x = (i - 1) / 10;
                     y = (i - 1) % 10;
-                    if (!cells[x][y].hasShip) {
+                    if (cells[x][y].hasShip) {
                         cells[x][y].shotShip = true;
                         --aliveCells;
                         assign_values1(field, i, k);
@@ -108,8 +108,9 @@ public class grid {
                     cells[x][y].dead = true;
                     return new int[]{x, y};
                 } else if (!(i % 10 == 9) && (field[i + 1] == 0)) {
-                    x = (i - 1) / 10;
-                    y = (i - 1) % 10;
+                    x = (i + 1) / 10;
+                    y = (i + 1) % 10;
+                    System.out.print(y);
                     if (!cells[x][y].hasShip) {
                         cells[x][y].shotShip = true;
                         --aliveCells;
@@ -120,20 +121,20 @@ public class grid {
                     cells[x][y].dead = true;
                     return new int[]{x, y};
                 } else if (!(i / 10 == 9) && (field[i + 10] == 0)) {
-                    x = (i - 1) / 10;
-                    y = (i - 1) % 10;
+                    x = (i + 10) / 10;
+                    y = (i + 10) % 10;
                     if (!cells[x][y].hasShip) {
                         cells[x][y].shotShip = true;
                         --aliveCells;
                         assign_values3(field, i, k);
                     } else {
-                        field[i + 101] = 1;
+                        field[i + 10] = 1;
                     }
                     cells[x][y].dead = true;
                     return new int[]{x, y};
                 } else if (!(i / 10 == 0) && (field[i - 10] == 0)) {
-                    x = (i - 1) / 10;
-                    y = (i - 1) % 10;
+                    x = (i - 10) / 10;
+                    y = (i - 10) % 10;
                     if (!cells[x][y].hasShip) {
                         cells[x][y].shotShip = true;
                         --aliveCells;
@@ -165,13 +166,11 @@ public class grid {
     }
 
     public void assign_values1(int[] field, int i, int k) {
-        int x = (i - 1) / 10;
-        int y = (i - 1) % 10;
         while (!(k == 99) && !(field[k] == 0) && !(field[k] == 1)) {
             k++;
         }
-        if (((i - 1 == 0) || (!((i - 1) % 10 == 0) && !(cells[x - 1][y].hasShip)))
-                && ((k == 99) || (!(k % 10 == 9) && !(cells[(k + 1) % 10][(k + 1) / 10].hasShip)))) {
+        if (((i - 1 == 0) || (!((i - 1) % 10 == 0) && !(cells[(i - 1) / 10][((i - 1) % 10) - 1].hasShip)))
+                && ((k == 99) || (!(k % 10 == 9) && !(cells[(k + 1) / 10][(k + 1) % 10].hasShip)))) {
             field[i - 1] = 3;
             while (!(k - i < 0)) {
                 field[k - 1] = 3;
@@ -182,56 +181,50 @@ public class grid {
         }
     }
     public void assign_values2(int[] field, int i, int k) {
-        int x = (i - 1) / 10;
-        int y = (i - 1) % 10;
         while (!(k == 0) && !(field[k] == 0) && !(field[k] == 1)) {
             k--;
         }
-        if (((i + 1 == 99) || (!((i + 1) % 10 == 9) && !(cells[x + 1][y].hasShip)))
-                && ((k == 0) || (!(k % 10 == 0) && !(cells[(k - 1) % 10][(k - 1) / 10].hasShip)))) {
+        if (((i + 1 == 99) || (!((i + 1) % 10 == 9) && !(cells[(i - 1) / 10][((i - 1) % 10) + 1].hasShip)))
+                && ((k == 0) || (!(k % 10 == 0) && !(cells[(k - 1) / 10][(k - 1) % 10].hasShip)))) {
             field[i + 1] = 3;
             while (!(i - k < 0)) {
                 field[k - 1] = 3; // check if that is correct
                 k++;
             }
         } else {
-            field[i - 1] = 2;
+            field[i + 1] = 2;
         }
     }
 
     public void assign_values3(int[] field, int i, int k) {
-        int x = (i - 1) / 10;
-        int y = (i - 1) % 10;
-        while (!(k == 0) && !(field[k] == 0) && !(field[k] == 1)) {
-            k--;
+        while (!(k/10 == 0) && !(field[k] == 0) && !(field[k] == 1)) {
+            k = k-10;
         }
-        if (((i + 1 == 99) || (!((i + 1) % 10 == 9) && !(cells[x + 1][y].hasShip)))
-                && ((k == 0) || (!(k % 10 == 0) && !(cells[(k - 1) % 10][(k - 1) / 10].hasShip)))) {
-            field[i + 1] = 3;
-            while (!(i - k < 0)) {
-                field[k - 1] = 3; // check if that is correct
-                k++;
+        if ((((i + 10)/10 == 9) || (!((i + 10) % 10 == 9) && !(cells[((i + 10) / 10) + 1][(i + 10) % 10].hasShip)))
+                && (((k/10) == 0) || (!(k / 10 == 0) && !(cells[(k - 10) / 10][(k - 10) % 10].hasShip)))) {
+            field[i + 10] = 3;
+            while (!(i == k)) {
+                field[k] = 3; // check if that is correct
+                k = k + 10;
             }
         } else {
-            field[i - 1] = 2;
+            field[i + 10] = 2;
         }
     }
 
     public void assign_values4(int[] field, int i, int k) {
-        int x = (i - 1) / 10;
-        int y = (i - 1) % 10;
-        while (!(k == 0) && !(field[k] == 0) && !(field[k] == 1)) {
-            k--;
+        while (!(k/10 == 9) && !(field[k] == 0) && !(field[k] == 1)) {
+            k = k + 10;
         }
-        if (((i + 1 == 99) || (!((i + 1) % 10 == 9) && !(cells[x + 1][y].hasShip)))
-                && ((k == 0) || (!(k % 10 == 0) && !(cells[(k - 1) % 10][(k - 1) / 10].hasShip)))) {
-            field[i + 1] = 3;
-            while (!(i - k < 0)) {
-                field[k - 1] = 3; // check if that is correct
-                k++;
+        if ((((i - 10) % 10 == 0) || (!((i - 10) % 10 == 0) && !(cells[((i - 10) / 10) + 1][(i - 10) % 10].hasShip)))
+                && ((k == 99) || (!(k / 10 == 9) && !(cells[(k - 10) / 10][(k - 10) % 10].hasShip)))) {
+            field[i - 10] = 3;
+            while (!(i == k)) {
+                field[k] = 3;
+                k = k - 10;
             }
         } else {
-            field[i - 1] = 2;
+            field[i - 10] = 2;
         }
     }
 
