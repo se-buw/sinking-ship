@@ -18,6 +18,7 @@ public class grid {
     int shipAmount = shiplength.size();
     int aliveCells;
 
+
     //Constructor of the grid the game is played on, with its ships and cells
     public grid(){
         this.rows = 10;
@@ -82,6 +83,156 @@ public class grid {
 
         }
         return new int[]{randRow,randCol};
+    }
+
+    //AI Hunt and Target Method
+    public int[] hunt_target_shoot(int[] field) {
+        Random rand = new Random();
+        boolean no_valid_target = true;
+        int x = -1;
+        int y = -1;
+        int i;
+        for (i = 0; i < 100; i++) {
+            if (field[i] == 2) {
+                int k = i;
+                if (!(i % 10 == 0) && field[i - 1] == 0) {
+                    x = (i - 1) / 10;
+                    y = (i - 1) % 10;
+                    if (!cells[x][y].hasShip) {
+                        cells[x][y].shotShip = true;
+                        --aliveCells;
+                        assign_values1(field, i, k);
+                    } else {
+                        field[i - 1] = 1;
+                    }
+                    cells[x][y].dead = true;
+                    return new int[]{x, y};
+                } else if (!(i % 10 == 9) && (field[i + 1] == 0)) {
+                    x = (i - 1) / 10;
+                    y = (i - 1) % 10;
+                    if (!cells[x][y].hasShip) {
+                        cells[x][y].shotShip = true;
+                        --aliveCells;
+                        assign_values2(field, i, k);
+                    } else {
+                        field[i + 1] = 1;
+                    }
+                    cells[x][y].dead = true;
+                    return new int[]{x, y};
+                } else if (!(i / 10 == 9) && (field[i + 10] == 0)) {
+                    x = (i - 1) / 10;
+                    y = (i - 1) % 10;
+                    if (!cells[x][y].hasShip) {
+                        cells[x][y].shotShip = true;
+                        --aliveCells;
+                        assign_values3(field, i, k);
+                    } else {
+                        field[i + 101] = 1;
+                    }
+                    cells[x][y].dead = true;
+                    return new int[]{x, y};
+                } else if (!(i / 10 == 0) && (field[i - 10] == 0)) {
+                    x = (i - 1) / 10;
+                    y = (i - 1) % 10;
+                    if (!cells[x][y].hasShip) {
+                        cells[x][y].shotShip = true;
+                        --aliveCells;
+                        assign_values4(field, i, k);
+                    } else {
+                        field[i - 10] = 1;
+                    }
+                    return new int[]{x, y};
+                }
+            }
+        }
+        while (no_valid_target) {
+                i = rand.nextInt(100);
+                if (field[i] == 0) {
+                    x = (i - 1) / 10;
+                    y = (i - 1) % 10;
+                    if (!cells[x][y].hasShip) {
+                        cells[x][y].shotShip = true;
+                        --aliveCells;
+                        field[i] = 2;
+                    } else {
+                        field[i] = 1;
+                    }
+                    no_valid_target = false;
+                }
+        }
+        cells[x][y].dead = true;
+        return new int[]{x, y};
+    }
+
+    public void assign_values1(int[] field, int i, int k) {
+        int x = (i - 1) / 10;
+        int y = (i - 1) % 10;
+        while (!(k == 99) && !(field[k] == 0) && !(field[k] == 1)) {
+            k++;
+        }
+        if (((i - 1 == 0) || (!((i - 1) % 10 == 0) && !(cells[x - 1][y].hasShip)))
+                && ((k == 99) || (!(k % 10 == 9) && !(cells[(k + 1) % 10][(k + 1) / 10].hasShip)))) {
+            field[i - 1] = 3;
+            while (!(k - i < 0)) {
+                field[k - 1] = 3;
+                k--;
+            }
+        } else {
+            field[i - 1] = 2;
+        }
+    }
+    public void assign_values2(int[] field, int i, int k) {
+        int x = (i - 1) / 10;
+        int y = (i - 1) % 10;
+        while (!(k == 0) && !(field[k] == 0) && !(field[k] == 1)) {
+            k--;
+        }
+        if (((i + 1 == 99) || (!((i + 1) % 10 == 9) && !(cells[x + 1][y].hasShip)))
+                && ((k == 0) || (!(k % 10 == 0) && !(cells[(k - 1) % 10][(k - 1) / 10].hasShip)))) {
+            field[i + 1] = 3;
+            while (!(i - k < 0)) {
+                field[k - 1] = 3; // check if that is correct
+                k++;
+            }
+        } else {
+            field[i - 1] = 2;
+        }
+    }
+
+    public void assign_values3(int[] field, int i, int k) {
+        int x = (i - 1) / 10;
+        int y = (i - 1) % 10;
+        while (!(k == 0) && !(field[k] == 0) && !(field[k] == 1)) {
+            k--;
+        }
+        if (((i + 1 == 99) || (!((i + 1) % 10 == 9) && !(cells[x + 1][y].hasShip)))
+                && ((k == 0) || (!(k % 10 == 0) && !(cells[(k - 1) % 10][(k - 1) / 10].hasShip)))) {
+            field[i + 1] = 3;
+            while (!(i - k < 0)) {
+                field[k - 1] = 3; // check if that is correct
+                k++;
+            }
+        } else {
+            field[i - 1] = 2;
+        }
+    }
+
+    public void assign_values4(int[] field, int i, int k) {
+        int x = (i - 1) / 10;
+        int y = (i - 1) % 10;
+        while (!(k == 0) && !(field[k] == 0) && !(field[k] == 1)) {
+            k--;
+        }
+        if (((i + 1 == 99) || (!((i + 1) % 10 == 9) && !(cells[x + 1][y].hasShip)))
+                && ((k == 0) || (!(k % 10 == 0) && !(cells[(k - 1) % 10][(k - 1) / 10].hasShip)))) {
+            field[i + 1] = 3;
+            while (!(i - k < 0)) {
+                field[k - 1] = 3; // check if that is correct
+                k++;
+            }
+        } else {
+            field[i - 1] = 2;
+        }
     }
 
 
@@ -156,6 +307,7 @@ public class grid {
         }
         //where to place ship: row or column
         //declaring some var for later use
+
         boolean NotValidShipPos = true;
         int StartInt;
         int EndInt;
