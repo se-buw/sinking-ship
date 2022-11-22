@@ -19,27 +19,6 @@ import org.apache.commons.csv.CSVRecord;
 public class App {
 
 	public static void main(String[] args) {
-		grid Grid = new grid();
-		int[] field = new int[100];
-		field[2] = 2;
-		field[3] = 2;
-		field[1] = 1;
-		Grid.cells[0][2].hasShip = true;
-		Grid.cells[0][3].hasShip = true;
-		Grid.cells[0][4].hasShip = true;
-		int[] g = Grid.hunt_target_shoot(field);
-		System.out.print(g[0]);
-		System.out.print(g[1]);
-		System.out.print(field[0]);
-		System.out.print(field[1]);
-		System.out.print(field[2]);
-		System.out.print(field[3]);
-		System.out.print(field[4]);
-		System.out.print(field[5]);
-		System.out.print(field[12]);
-		//System.out.print(field[6]);
-	}
-		/*
 		GameEngine ge = new GameEngine();
 
 		Scanner scanner = new Scanner(System.in);
@@ -60,6 +39,5 @@ public class App {
 			}
 		}
 	}
-	*/
 }
 
