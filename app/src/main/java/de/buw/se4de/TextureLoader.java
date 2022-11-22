@@ -60,8 +60,13 @@ public class TextureLoader {
             try {
                 return ImageIO.read(new File(loc));
             } catch (IOException e) {
-                //Error Handling Here
-            }
+                try {
+                    return ImageIO.read(new File("src/main/resources/fallback.png"));
+                } catch (IOException f) {
+                    f.printStackTrace();
+                } 
+                e.printStackTrace();
+            } 
             return null;
         }
 }

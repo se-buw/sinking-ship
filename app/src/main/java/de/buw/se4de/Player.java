@@ -80,7 +80,7 @@ public class Player {
 
         Vector3f new_pos = new Vector3f(cam.pos);
         Vector3f dir = new Vector3f(cam.front);
-        new_pos = new_pos.add(dir.mul(3.0f));
+        new_pos = new_pos.add(dir.mul(0.5f));
 
         m.updatePosition(new_pos.x, new_pos.y, new_pos.z);
     }

@@ -154,8 +154,7 @@ public class Model {
         // modelMatrix.translation(0.0f, 0.0f, 0.0f);
         glLoadMatrixf(viewMatrix.mul(modelMatrix, modelViewMatrix).get(fb));
 
-        glMaterialf(GL_FRONT, GL_EMISSION, 4.0f);
-
+        glDisable(GL_LIGHTING);
         glBegin(GL_LINES);
             glVertex3f(bb_min.x, bb_min.y, bb_min.z);
             glVertex3f(bb_max.x, bb_min.y, bb_min.z);
@@ -173,5 +172,6 @@ public class Model {
             glVertex3f(start.x, start.y, start.z);
             glVertex3f(end.x, end.y, end.z);
         glEnd();
+        glEnable(GL_LIGHTING);
     }
 }

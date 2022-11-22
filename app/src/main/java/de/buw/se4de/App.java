@@ -235,12 +235,13 @@ public class App {
 			}
 
 			for (Model m : models) {
+				glLoadIdentity();
 				m.draw(player.get_cam(), pos);
 			}
 
-			// for (Model m : interactables) {
-			// 	m.drawBB(player.get_cam());
-			// }
+			for (Model m : interactables) {
+				m.drawBB(player.get_cam());
+			}
 			
 			glfwSwapBuffers(window); // swap the color buffers
 
