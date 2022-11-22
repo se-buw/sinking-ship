@@ -6,10 +6,42 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class OBJReader {
-    public static ArrayList<Triangle> open(String path) {
+public class SDFReader {
 
-        ArrayList<Triangle> tris = new ArrayList<>();
+    public static void openSDF(String path, ArrayList<Model> models, ArrayList<Model> interactables) {
+        BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader("src/main/resources/"+path+".sdf"));
+			String line = reader.readLine();
+			while (line != null) {
+				String[] line_arr = line.split(",");
+                String name = line_arr[0];
+                String[] positions = line_arr[1].split(" ");
+                String inter = line_arr[2];
+
+                float x = Float.parseFloat(positions[0]);
+                float y = Float.parseFloat(positions[1]);
+                float z = Float.parseFloat(positions[2]);
+
+                Model m = new Model();
+                m.loadModel(name);
+                m.updatePosition(x, y, z);
+                if (inter.equals("i")) {
+                    m.setBB();
+                    interactables.add(m);
+                }
+
+                models.add(m);
+
+				line = reader.readLine();
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+
+    public static void openModel(String path, ArrayList<Triangle> tris) {
 
         ArrayList<Float> positions = new ArrayList<>();
         ArrayList<Float> uvs = new ArrayList<>();
@@ -70,7 +102,5 @@ public class OBJReader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-        return tris;
     }
 }

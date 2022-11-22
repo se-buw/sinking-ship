@@ -1,5 +1,8 @@
 package de.buw.se4de;
 
+import java.util.ArrayList;
+
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
@@ -20,8 +23,8 @@ public class Player {
     // TODO: add sinking ship stuff
 
     public void process_input(long window, float delta) {
-        Vector3f front = new Vector3f(cam.front.x, cam.front.y, cam.front.z);
-        Vector3f right = new Vector3f(cam.front.x, cam.front.y, cam.front.z);
+        Vector3f front = new Vector3f(cam.front);
+        Vector3f right = new Vector3f(cam.front);
         right = right.cross(0.0f, 1.0f, 0.0f);
 
         front.y = 0.0f;
@@ -71,7 +74,33 @@ public class Player {
         cam.look_at.z = cam.pos.z + cam.front.z;
     }
 
+    public void process_hold(ArrayList<Model> interactable) {
+        Model m = find_interactable(interactable);
+        if (m == null) return;
+
+        Vector3f new_pos = new Vector3f(cam.pos);
+        Vector3f dir = new Vector3f(cam.front);
+        new_pos = new_pos.add(dir.mul(3.0f));
+
+        m.updatePosition(new_pos.x, new_pos.y, new_pos.z);
+    }
+
     public Camera get_cam() {
         return cam;
+    }
+
+    public Model find_interactable(ArrayList<Model> interactables) {
+        float dist = Float.MAX_VALUE;
+        Model m = null;
+
+        for (Model model : interactables) {
+            float t = model.intersect();
+            if (t < dist && t > 0.0f) {
+                dist = t;
+                m = model;
+            }
+        }
+
+        return m;
     }
 }

@@ -4,12 +4,14 @@
 package de.buw.se4de;
 
 import java.nio.*;
+import java.util.ArrayList;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
-
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -33,6 +35,8 @@ public class App {
 
 	private double lastX = 0.0;
 	private double lastY = 0.0;
+
+	private boolean mouse_held = false;
 
 	public double getTime() {
         return glfwGetTime();
@@ -77,8 +81,8 @@ public class App {
 
 		// Configure GLFW
 		glfwDefaultWindowHints(); // optional, the current window hints are already the default
-		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+		glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE); // the window will stay hidden after creation
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be resizable
 
 		// Create the window
 		window = glfwCreateWindow(1280, 720, "Hello World!", NULL, NULL);
@@ -130,6 +134,10 @@ public class App {
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 		Player player = new Player();
+		ArrayList<Model> models = new ArrayList<>();
+		ArrayList<Model> interactables = new ArrayList<>();
+
+		SDFReader.openSDF("test", models, interactables);
 
 		GLFWCursorPosCallback cursorPosCallback = new GLFWCursorPosCallback() {
 			@Override
@@ -144,38 +152,94 @@ public class App {
 		};
 		glfwSetCursorPosCallback(window, cursorPosCallback);
 
+		GLFWMouseButtonCallback mouseCallback = new GLFWMouseButtonCallback() {
+			@Override
+			public void invoke(long window, int button, int action, int mods) {
+				if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+					mouse_held = true;
+				if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+					mouse_held = false;
+			}
+		};
+		glfwSetMouseButtonCallback(window, mouseCallback);
+
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
+		glEnable(GL_NORMALIZE);
 
+		Vector3f l_pos = new Vector3f(0.0f, 0.5f, 0.0f);
 		FloatBuffer pos = BufferUtils.createFloatBuffer(4);
 		pos.put(0, 0.0f);
-        pos.put(1, 5.0f);
-        pos.put(2, 0.0f);
-        pos.put(3, 0.0f);
+		pos.put(1, 0.0f);
+		pos.put(2, 0.0f);
+        pos.put(3, 1.0f);
 		FloatBuffer col = BufferUtils.createFloatBuffer(4);
-		col.put(0, 0.8f);
-        col.put(1, 0.8f);
-        col.put(2, 0.8f);
+		col.put(0, 2.5f);
+        col.put(1, 2.5f);
+        col.put(2, 2.5f);
         col.put(3, 1.0f);
+		FloatBuffer att = BufferUtils.createFloatBuffer(4);
+		att.put(0, 0.0f);
+		att.put(1, 0.0f);
+		att.put(2, 1.0f);
 		glLightfv(GL_LIGHT0, GL_POSITION, pos);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, col);
+		glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.0f);
+		glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.0f);
+		glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 1.0f);
+
+		FloatBuffer amb = BufferUtils.createFloatBuffer(4);
+		amb.put(0, 0.2f);
+		amb.put(1, 0.2f);
+		amb.put(2, 0.2f);
+		amb.put(3, 1.0f);
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, amb);
+
 
 		// Set the clear color
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
-		Model m = new Model();
-		m.loadModel("text");
-
 		lastLoopTime = getTime();
+
+		Matrix4f l_projMatrix = new Matrix4f();
+		Matrix4f l_viewMatrix = new Matrix4f();
+		Matrix4f l_modelMatrix = new Matrix4f();
+		FloatBuffer fb = BufferUtils.createFloatBuffer(16);
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		while ( !glfwWindowShouldClose(window) ) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+			// set light position
+			l_projMatrix.setPerspective((float) Math.toRadians(40), 1280.0f / 720.0f, 0.01f, 100.0f);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glLoadMatrixf(l_projMatrix.get(fb));
+
+			// Set lookat view matrix
+			l_viewMatrix.setLookAt(player.cam.pos.x, player.cam.pos.y, player.cam.pos.z, player.cam.look_at.x, player.cam.look_at.y, player.cam.look_at.z, 0.0f, 1.0f, 0.0f);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+
+			l_modelMatrix.translation(l_pos);
+			glLoadMatrixf(l_viewMatrix.mul(l_modelMatrix).get(fb));
+
+			glLightfv(GL_LIGHT0, GL_POSITION, pos);
+
 			player.process_input(window, getDelta());
-			m.draw(player.get_cam());
+			if (mouse_held) {
+				player.process_hold(interactables);
+			}
+
+			for (Model m : models) {
+				m.draw(player.get_cam(), pos);
+			}
+
+			// for (Model m : interactables) {
+			// 	m.drawBB(player.get_cam());
+			// }
 			
 			glfwSwapBuffers(window); // swap the color buffers
 
