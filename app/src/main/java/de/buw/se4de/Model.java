@@ -1,5 +1,6 @@
 package de.buw.se4de;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.nio.FloatBuffer;
 
@@ -15,6 +16,8 @@ public class Model {
     private Vector3f bb_min = new Vector3f(Float.MAX_VALUE);
     private Vector3f bb_max = new Vector3f(Float.MIN_VALUE); 
 
+    private int texID;
+
     private Matrix4f projMatrix = new Matrix4f();
     private Matrix4f viewMatrix = new Matrix4f();
     private Matrix4f modelMatrix = new Matrix4f();
@@ -24,7 +27,9 @@ public class Model {
     FloatBuffer fb = BufferUtils.createFloatBuffer(16);
 
     void loadModel(String path) {
+        BufferedImage image = TextureLoader.loadImage("src/main/resources/"+path+".png");
         SDFReader.openModel(path, tris);
+        texID = TextureLoader.loadTexture(image);
         modelMatrix.translation(0.0f, 0.0f, 0.0f);
     }
 
@@ -113,12 +118,19 @@ public class Model {
         glMaterialf(GL_FRONT, GL_EMISSION, 0);
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, col);
 
+        glBindTexture(GL_TEXTURE_2D, texID);
+
         glBegin(GL_TRIANGLES);
         for (Triangle t : tris) {
+            glTexCoord2f(t.v0.u, t.v0.v);
             glNormal3f(t.v0.norm_x, t.v0.norm_y, t.v0.norm_z);
             glVertex3f(t.v0.pos_x , t.v0.pos_y , t.v0.pos_z);
+
+            glTexCoord2f(t.v1.u, t.v1.v);
             glNormal3f(t.v1.norm_x, t.v1.norm_y, t.v1.norm_z);
             glVertex3f(t.v1.pos_x , t.v1.pos_y , t.v1.pos_z);
+            
+            glTexCoord2f(t.v2.u, t.v2.v);
             glNormal3f(t.v2.norm_x, t.v2.norm_y, t.v2.norm_z);
             glVertex3f(t.v2.pos_x , t.v2.pos_y , t.v2.pos_z);
         }
