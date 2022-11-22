@@ -16,6 +16,8 @@ public class grid {
     Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
     ArrayList<Integer> shiplength = new ArrayList<>(Arrays.asList(5,4,4,3,3,2));
     int shipAmount = shiplength.size();
+    //for hunt and target method
+    int[] field = new int[100];
     int aliveCells;
 
 
@@ -86,9 +88,9 @@ public class grid {
     }
 
     //AI Hunt and Target Method
-    public int[] hunt_target_shoot(int[] field) {
+    public int[] hunt_target_shoot() {
         //idea: shooting near cells that shot a ship
-        //input: field -> an array from 0 to 99 for each cell (eg cell[9][9] = field[99]
+        //use of field (property of grid) -> an array from 0 to 99 for each cell (eg cell[9][9] = field[99])
         //output: array containing x and y coordinate
         //pointing system in array: 0 - not shot at, 1 - shot but missed, 2 - shot ship, 3 - sunk ship
         Random rand = new Random();
