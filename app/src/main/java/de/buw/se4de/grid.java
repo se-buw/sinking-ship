@@ -16,7 +16,10 @@ public class grid {
     Character[] letters ={'A','B','C','D','E','F','G','H','I','J'};
     ArrayList<Integer> shiplength = new ArrayList<>(Arrays.asList(5,4,4,3,3,2));
     int shipAmount = shiplength.size();
+    //for hunt and target method
+    int[] field = new int[100];
     int aliveCells;
+
 
     //Constructor of the grid the game is played on, with its ships and cells
     public grid(){
@@ -82,6 +85,180 @@ public class grid {
 
         }
         return new int[]{randRow,randCol};
+    }
+
+    //AI Hunt and Target Method
+    public int[] hunt_target_shoot() {
+        //idea: shooting near cells that shot a ship
+        //use of field (property of grid) -> an array from 0 to 99 for each cell (eg cell[9][9] = field[99])
+        //output: array containing x and y coordinate
+        //pointing system in array: 0 - not shot at, 1 - shot but missed, 2 - shot ship, 3 - sunk ship
+        Random rand = new Random();
+        boolean no_valid_target = true;
+        //initialising x,y coordinates
+        int x = -1;
+        int y = -1;
+        //i helping integer
+        int i;
+        //for loop to check if there are targets (cells that shot ship)
+        for (i = 0; i < 100; i++) {
+            //if we found a cell that shot a ship
+            if (field[i] == 2) {
+                //introducing a second helping integer k that will be dynamically changed
+                int k = i;
+                // if there is an 'unshot' cell left to the 'shot_ship' cell
+                if (!(i % 10 == 0) && field[i - 1] == 0) {
+                    // our coordinates in terms if i (working with mod and div)
+                    x = (i - 1) / 10;
+                    y = (i - 1) % 10;
+                    //if cell has ship
+                    if (cells[x][y].hasShip) {
+                        cells[x][y].shotShip = true;
+                        --aliveCells;
+                        //I split this part up to have a better overview of the code (functions below)
+                        assign_values1(field, i, k);
+                    } else {
+                        //else you shot and missed
+                        field[i - 1] = 1;
+                    }
+                    cells[x][y].dead = true;
+                    return new int[]{x, y};
+                } // if there is an 'unshot' cell right
+                else if (!(i % 10 == 9) && (field[i + 1] == 0)) {
+                    x = (i + 1) / 10;
+                    y = (i + 1) % 10;
+                    if (cells[x][y].hasShip) {
+                        cells[x][y].shotShip = true;
+                        --aliveCells;
+                        //second help function
+                        assign_values2(field, i, k);
+                    } else {
+                        field[i + 1] = 1;
+                    }
+                    cells[x][y].dead = true;
+                    return new int[]{x, y};
+                } // if there is an 'unshot' cell down
+                else if (!(i / 10 == 9) && (field[i + 10] == 0)) {
+                    x = (i + 10) / 10;
+                    y = (i + 10) % 10;
+                    if (cells[x][y].hasShip) {
+                        cells[x][y].shotShip = true;
+                        --aliveCells;
+                        //third function
+                        assign_values3(field, i, k);
+                    } else {
+                        field[i + 10] = 1;
+                    }
+                    cells[x][y].dead = true;
+                    return new int[]{x, y};
+                } // if there is an 'unshot' cell up
+                else if (!(i / 10 == 0) && (field[i - 10] == 0)) {
+                    x = (i - 10) / 10;
+                    y = (i - 10) % 10;
+                    if (cells[x][y].hasShip) {
+                        cells[x][y].shotShip = true;
+                        --aliveCells;
+                        //fourth function
+                        assign_values4(field, i, k);
+                    } else {
+                        field[i - 10] = 1;
+                    }
+                    return new int[]{x, y};
+                }
+            }
+        }
+        //if no targets, then we hunt randomly
+        while (no_valid_target) {
+                // pick random i so long until you find an unshot cell
+                i = rand.nextInt(100);
+                //if cell unshot
+                if (field[i] == 0) {
+                    x = (i - 1) / 10;
+                    y = (i - 1) % 10;
+                    if (cells[x][y].hasShip) {
+                        cells[x][y].shotShip = true;
+                        --aliveCells;
+                        field[i] = 2;
+                    } else {
+                        field[i] = 1;
+                    }
+                    no_valid_target = false;
+                }
+        }
+        cells[x][y].dead = true;
+        return new int[]{x, y};
+    }
+
+    public void assign_values1(int[] field, int i, int k) {
+        // k - end cell of ship, i - start cell of ship
+        while (!(k == 99) && !(field[k] == 0) && !(field[k] == 1)) {
+            // increase k until you get supposedly to the end of the ship according to field
+            k++;
+        }
+        //check now if the cells before i and after k have indeed ships or are at some corner
+        //if not, enter the if statement
+        if (((i - 1 == 0) || (!((i - 1) % 10 == 0) && !(cells[(i - 1) / 10][((i - 1) % 10) - 1].hasShip)))
+                && ((k == 99) || (!(k % 10 == 9) && !(cells[(k + 1) / 10][(k + 1) % 10].hasShip)))) {
+            //you have sunk a ship then and you'll mark all cells to 3 instead of 2
+            field[i - 1] = 3;
+            while (!(k - i < 0)) {
+                field[k - 1] = 3;
+                k--;
+            }
+        } // else you just shot a ship but not sunk it
+        else {
+            field[i - 1] = 2;
+        }
+    }
+    public void assign_values2(int[] field, int i, int k) {
+        // same principle as assign_values1
+        while (!(k == 0) && !(field[k] == 0) && !(field[k] == 1)) {
+            k--;
+        }
+        if (((i + 1 == 99) || (!((i + 1) % 10 == 9) && !(cells[(i + 1) / 10][((i + 1) % 10) + 1].hasShip)))
+                && ((k == 0) || (!(k % 10 == 0) && !(cells[(k - 1) / 10][(k - 1) % 10].hasShip)))) {
+            field[i + 1] = 3;
+            while (!(i - k < 0)) {
+                field[k + 1] = 3; // check if that is correct
+                k++;
+            }
+        } else {
+            field[i + 1] = 2;
+        }
+    }
+
+    public void assign_values3(int[] field, int i, int k) {
+        // same principle as assign_values1
+        while (!(k/10 == 0) && !(field[k] == 0) && !(field[k] == 1)) {
+            k = k-10;
+        }
+        if ((((i + 10)/10 == 9) || (!((i + 10) / 10 == 9) && !(cells[((i + 10) / 10) + 1][(i + 10) % 10].hasShip)))
+                && (((k/10) == 0) || (!(k / 10 == 0) && !(cells[(k - 10) / 10][(k - 10) % 10].hasShip)))) {
+            field[i + 10] = 3;
+            while (!(i < k)) {
+                field[k] = 3;
+                k = k + 10;
+            }
+        } else {
+            field[i + 10] = 2;
+        }
+    }
+
+    public void assign_values4(int[] field, int i, int k) {
+        // same principle as assign_values1
+        while (!(k/10 == 9) && !(field[k] == 0) && !(field[k] == 1)) {
+            k = k + 10;
+        }
+        if ((((i - 10) / 10 == 0) || (!((i - 10) / 10 == 0) && !(cells[((i - 10) / 10) + 1][(i - 10) % 10].hasShip)))
+                && ((k/10 == 99) || (!(k / 10 == 9) && !(cells[(k + 10) / 10][(k + 10) % 10].hasShip)))) {
+            field[i - 10] = 3;
+            while (!(i > k)) {
+                field[k-10] = 3;
+                k = k - 10;
+            }
+        } else {
+            field[i - 10] = 2;
+        }
     }
 
 
@@ -156,6 +333,7 @@ public class grid {
         }
         //where to place ship: row or column
         //declaring some var for later use
+
         boolean NotValidShipPos = true;
         int StartInt;
         int EndInt;
