@@ -17,19 +17,25 @@ public class Model {
     private Vector3f bb_max = new Vector3f(Float.MIN_VALUE); 
 
     private int texID;
+    private boolean hidden;
 
+    public Vector3f position = new Vector3f();
+    public boolean rotated = false;
     private Matrix4f projMatrix = new Matrix4f();
     private Matrix4f viewMatrix = new Matrix4f();
     private Matrix4f modelMatrix = new Matrix4f();
     private Matrix4f modelViewMatrix = new Matrix4f();
 
+    public int len = 0;
+
     // FloatBuffer for transferring matrices to OpenGL
     FloatBuffer fb = BufferUtils.createFloatBuffer(16);
 
-    void loadModel(String path) {
+    void loadModel(String path, boolean h) {
         BufferedImage image = TextureLoader.loadImage("src/main/resources/"+path+".png");
         SDFReader.openModel(path, tris);
         texID = TextureLoader.loadTexture(image);
+        hidden = h;
         modelMatrix.translation(0.0f, 0.0f, 0.0f);
     }
 
@@ -38,20 +44,32 @@ public class Model {
 
     void setBB() {
         for (Triangle tri : tris) {
-            if (tri.v0.pos_x < bb_min.x) bb_min.x = tri.v0.pos_x; if (tri.v0.pos_x > bb_max.x) bb_max.x = tri.v0.pos_x;
-            if (tri.v0.pos_y < bb_min.y) bb_min.y = tri.v0.pos_y; if (tri.v0.pos_y > bb_max.y) bb_max.y = tri.v0.pos_y;
-            if (tri.v0.pos_z < bb_min.z) bb_min.z = tri.v0.pos_z; if (tri.v0.pos_z > bb_max.z) bb_max.z = tri.v0.pos_z;
-            if (tri.v1.pos_x < bb_min.x) bb_min.x = tri.v1.pos_x; if (tri.v1.pos_x > bb_max.x) bb_max.x = tri.v1.pos_x;
-            if (tri.v1.pos_y < bb_min.y) bb_min.y = tri.v1.pos_y; if (tri.v1.pos_y > bb_max.y) bb_max.y = tri.v1.pos_y;
-            if (tri.v1.pos_z < bb_min.z) bb_min.z = tri.v1.pos_z; if (tri.v1.pos_z > bb_max.z) bb_max.z = tri.v1.pos_z;
-            if (tri.v2.pos_x < bb_min.x) bb_min.x = tri.v2.pos_x; if (tri.v2.pos_x > bb_max.x) bb_max.x = tri.v2.pos_x;
-            if (tri.v2.pos_y < bb_min.y) bb_min.y = tri.v2.pos_y; if (tri.v2.pos_y > bb_max.y) bb_max.y = tri.v2.pos_y;
-            if (tri.v2.pos_z < bb_min.z) bb_min.z = tri.v2.pos_z; if (tri.v2.pos_z > bb_max.z) bb_max.z = tri.v2.pos_z;
+            if (tri.v0.pos_x-0.01f < bb_min.x) bb_min.x = tri.v0.pos_x-0.01f; if (tri.v0.pos_x+0.01f > bb_max.x) bb_max.x = tri.v0.pos_x+0.01f;
+            if (tri.v0.pos_y-0.01f < bb_min.y) bb_min.y = tri.v0.pos_y-0.01f; if (tri.v0.pos_y+0.01f > bb_max.y) bb_max.y = tri.v0.pos_y+0.01f;
+            if (tri.v0.pos_z-0.01f < bb_min.z) bb_min.z = tri.v0.pos_z-0.01f; if (tri.v0.pos_z+0.01f > bb_max.z) bb_max.z = tri.v0.pos_z+0.01f;
+            if (tri.v1.pos_x-0.01f < bb_min.x) bb_min.x = tri.v1.pos_x-0.01f; if (tri.v1.pos_x+0.01f > bb_max.x) bb_max.x = tri.v1.pos_x+0.01f;
+            if (tri.v1.pos_y-0.01f < bb_min.y) bb_min.y = tri.v1.pos_y-0.01f; if (tri.v1.pos_y+0.01f > bb_max.y) bb_max.y = tri.v1.pos_y+0.01f;
+            if (tri.v1.pos_z-0.01f < bb_min.z) bb_min.z = tri.v1.pos_z-0.01f; if (tri.v1.pos_z+0.01f > bb_max.z) bb_max.z = tri.v1.pos_z+0.01f;
+            if (tri.v2.pos_x-0.01f < bb_min.x) bb_min.x = tri.v2.pos_x-0.01f; if (tri.v2.pos_x+0.01f > bb_max.x) bb_max.x = tri.v2.pos_x+0.01f;
+            if (tri.v2.pos_y-0.01f < bb_min.y) bb_min.y = tri.v2.pos_y-0.01f; if (tri.v2.pos_y+0.01f > bb_max.y) bb_max.y = tri.v2.pos_y+0.01f;
+            if (tri.v2.pos_z-0.01f < bb_min.z) bb_min.z = tri.v2.pos_z-0.01f; if (tri.v2.pos_z+0.01f > bb_max.z) bb_max.z = tri.v2.pos_z+0.01f;
         }
     }
 
-    void updatePosition(float x, float y, float z) {
+    void updatePosition(float x, float y, float z, boolean rotate) {
+        
+        position.x = x;
+        position.y = y;
+        position.z = z;
         modelMatrix.translation(x, y, z);
+        if (rotated) {
+            modelMatrix.rotateY((float)Math.PI*0.5f);
+        } else {
+            modelMatrix.rotateY(0.0f);
+        }
+        if (rotate) {
+            rotated = !rotated;
+        }
     }
 
     float intersect() {
@@ -69,7 +87,7 @@ public class Model {
         Vector2f res = new Vector2f();
 
         Vector3f end = new Vector3f(ori);
-        end = end.add(dir.mul(10.0f));
+        end = end.add(dir.mul(2.5f));
 
         this.start = ori;
         this.end = end;
@@ -82,6 +100,8 @@ public class Model {
     }
 
     void draw(Camera cam, FloatBuffer l_pos) {
+
+        if (hidden) return;
 
         glShadeModel(GL_SMOOTH);
 
@@ -139,7 +159,7 @@ public class Model {
 
     void drawBB(Camera cam) {
 
-        glShadeModel(GL_FLAT);
+        glShadeModel(GL_SMOOTH);
 
         // Build the projection matrix. Watch out here for integer division
         // when computing the aspect ratio!

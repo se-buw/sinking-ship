@@ -18,18 +18,21 @@ public class SDFReader {
                 String name = line_arr[0];
                 String[] positions = line_arr[1].split(" ");
                 String inter = line_arr[2];
+                String hidden = line_arr[3];
+                int len = Integer.parseInt(line_arr[4]);
 
                 float x = Float.parseFloat(positions[0]);
                 float y = Float.parseFloat(positions[1]);
                 float z = Float.parseFloat(positions[2]);
 
                 Model m = new Model();
-                m.loadModel(name);
-                m.updatePosition(x, y, z);
+                m.loadModel(name, hidden.equals("h"));
+                m.updatePosition(x, y, z, false);
                 if (inter.equals("i")) {
                     m.setBB();
                     interactables.add(m);
                 }
+                m.len = len;
 
                 models.add(m);
 
