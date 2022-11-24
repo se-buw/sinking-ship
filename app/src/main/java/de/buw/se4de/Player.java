@@ -160,6 +160,7 @@ public class Player {
         if (m == null || !m.clickable) return;
 
         int cell = find_cell(m.position, false);
+        if (cell == -1) return;
         String row = Character.toString((char)(74 - cell/10));
 
         if (enemyGrid.cells[9-cell/10][cell%10].dead) {
@@ -180,8 +181,16 @@ public class Player {
 
     public void do_step(ArrayList<Model> clickable) {
         for (Model m : clickable) {
+            boolean player_cell = false;
             int cell = find_cell(m.position, false);
+            if (cell == -1) {
+                cell = find_cell(m.position, true);
+                player_cell = true;
+            }
             cell c = enemyGrid.cells[9-cell/10][cell%10];
+            if (player_cell) {
+                c = playerGrid.cells[9-cell/10][cell%10];
+            }
             int amount = (c.dead?1:0) + (c.shotShip?1:0) + (c.sunkShip?1:0);
             switch (amount) {
                 case 0: 

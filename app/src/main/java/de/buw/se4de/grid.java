@@ -283,6 +283,7 @@ public class grid {
                     } else {
                         field[i - 10] = 1;
                     }
+                    cells[x][y].dead = true;
                     return new int[]{x, y};
                 }
             }
@@ -293,8 +294,8 @@ public class grid {
                 i = rand.nextInt(100);
                 //if cell unshot
                 if (field[i] == 0) {
-                    x = i % 10;
-                    y = i / 10;
+                    x = i / 10;
+                    y = i % 10;
                     if (cells[x][y].hasShip) {
                         cells[x][y].shotShip = true;
                         --aliveCells;
