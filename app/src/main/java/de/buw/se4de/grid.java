@@ -54,6 +54,7 @@ public class grid {
         if (cells[rowInt][column].hasShip&&!cells[rowInt][column].dead){
             cells[rowInt][column].shotShip=true;
             aliveCells--;
+            updateSunk(rowInt, column);
         }
         cells[rowInt][column].dead=true;
     }
@@ -192,9 +193,9 @@ public class grid {
         int[] field = new int[100];
 
         // init field values
-        for (int y_init = 0; y_init < 10; ++y_init) {
-            for (int x_init = 0; x_init < 10; ++x_init) {
-                i = (9-y_init)*10 + (x_init);
+        for (int x_init = 0; x_init < 10; ++x_init) {
+            for (int y_init = 0; y_init < 10; ++y_init) {
+                i = x_init*10 + (y_init);
 
                 if (cells[x_init][y_init].sunkShip) {
                     field[i] = 3;
@@ -210,6 +211,7 @@ public class grid {
 
                 else if (cells[x_init][y_init].shotShip && !cells[x_init][y_init].sunkShip) {
                     field[i] = 2;
+                    updateSunk(x_init, y_init);
                 }
 
                 else if (cells[x_init][y_init].dead && !cells[x_init][y_init].shotShip) {
@@ -219,11 +221,8 @@ public class grid {
                 else {
                     field[i] = 0;
                 }
-                System.out.print(field[i]);
             }
-            System.out.println();
         }
-        System.out.println();
 
         //for loop to check if there are targets (cells that shot ship)
         for (i = 0; i < 100; i++) {

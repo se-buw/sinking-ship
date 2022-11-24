@@ -181,7 +181,7 @@ public class Player {
     public void do_step(ArrayList<Model> clickable) {
         for (Model m : clickable) {
             int cell = find_cell(m.position, false);
-            cell c = playerGrid.cells[9-cell/10][cell%10];
+            cell c = enemyGrid.cells[9-cell/10][cell%10];
             int amount = (c.dead?1:0) + (c.shotShip?1:0) + (c.sunkShip?1:0);
             switch (amount) {
                 case 0: 
