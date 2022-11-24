@@ -173,7 +173,7 @@ public class App {
 		glEnable(GL_NORMALIZE);
 		glEnable (GL_TEXTURE_2D);
 
-		Vector3f l_pos = new Vector3f(0.0f, 0.5f, 0.0f);
+		Vector3f l_pos = new Vector3f(0.0f, 2.0f, 1.0f);
 		FloatBuffer pos = BufferUtils.createFloatBuffer(4);
 		pos.put(0, 0.0f);
 		pos.put(1, 0.0f);
