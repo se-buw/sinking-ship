@@ -85,7 +85,6 @@ public class Player {
     }
 
     public void process_mouse(float xoffset, float yoffset) {
-        if (lockPlayer) return;
         xoffset *= mouse_sens;
         yoffset *= mouse_sens;
 
@@ -97,10 +96,12 @@ public class Player {
         if (pitch < -89.0f)
             pitch = -89.0f;
 
-        cam.front.x =(float) (Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));
-        cam.front.y =(float) (Math.sin(Math.toRadians(pitch)));
-        cam.front.z =(float) (Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));
-        cam.front = cam.front.normalize();
+        if (!lockPlayer) {
+            cam.front.x =(float) (Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));
+            cam.front.y =(float) (Math.sin(Math.toRadians(pitch)));
+            cam.front.z =(float) (Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));
+            cam.front = cam.front.normalize();
+        }
 
         cam.look_at.x = cam.pos.x + cam.front.x;
         cam.look_at.y = cam.pos.y + cam.front.y;

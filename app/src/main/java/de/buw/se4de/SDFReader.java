@@ -2,6 +2,8 @@ package de.buw.se4de;
 
 import java.util.ArrayList;
 
+import org.joml.Vector3f;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -36,9 +38,17 @@ public class SDFReader {
                 m.len = len;
                 m.clickable = clickable.equals("c");
                 if (m.clickable) {
-                    m.setBB();
-                    m.colored = true;
-                    clickables.add(m);
+                    if (name.equals("mVictory")) {
+                        m.colored = true;
+                        m.color = new Vector3f(1.0f, 0.84f, 0.0f);
+                    } else if (name.equals("mLost")) {
+                        m.colored = true;
+                        m.color = new Vector3f(1.0f, 0.0f, 0.0f);
+                    } else {
+                        m.setBB();
+                        m.colored = true;
+                        clickables.add(m);
+                    }
                 }
 
                 models.add(m);

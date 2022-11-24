@@ -113,7 +113,7 @@ public class Model {
 
         // Build the projection matrix. Watch out here for integer division
         // when computing the aspect ratio!
-        projMatrix.setPerspective((float) Math.toRadians(40), 1280.0f / 720.0f, 0.01f, 100.0f);
+        projMatrix.setPerspective((float) Math.toRadians(60), 1280.0f / 720.0f, 0.01f, 100.0f);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         glLoadMatrixf(projMatrix.get(fb));

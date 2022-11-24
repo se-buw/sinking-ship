@@ -208,3 +208,7 @@ mChosen,0.275 0.845 2.30,n,v,0,c
 mChosen,0.275 0.845 2.35,n,v,0,c
 mChosen,0.275 0.845 2.40,n,v,0,c
 mChosen,0.275 0.845 2.45,n,v,0,c
+mVic_Room,15 0 0,n,v,0,n
+mL_Room,-15 0 0,n,v,0,n
+mVictory,15 0 0,n,v,0,c
+mLost,-15 0 0,n,v,0,c

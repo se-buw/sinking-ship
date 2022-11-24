@@ -281,11 +281,11 @@ public class App {
 			}
 			if (player.gameEnded){
 				if (player.victory) {
-					player.cam.pos = new Vector3f(15.0f, 0.0f, 0.0f);
-					player.cam.look_at = new Vector3f(0.0f, 0.0f, 0.0f);
+					player.cam.pos = new Vector3f(15.0f, 1.8f, 0.0f);
+					player.cam.look_at = new Vector3f(15.0f, 1.6f, -1.0f);
 				} else {
-					player.cam.pos = new Vector3f(-15.0f, 0.0f, 0.0f);
-					player.cam.look_at = new Vector3f(0.0f, 0.0f, 0.0f);
+					player.cam.pos = new Vector3f(-15.0f, 1.8f, 0.0f);
+					player.cam.look_at = new Vector3f(-15.0f, 1.6f, -1.0f);
 				}
 			}
 			
