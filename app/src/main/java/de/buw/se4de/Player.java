@@ -32,6 +32,11 @@ public class Player {
     private boolean place = false;
     private boolean e_rel = true;
 
+    private boolean gameStarted = false;
+    private boolean playerTurn = true;
+    private boolean gameEnded = false;
+    private boolean victory = false;
+
     public void process_input(long window, float delta) {
         Vector3f front = new Vector3f(cam.front);
         Vector3f right = new Vector3f(cam.front);
@@ -112,25 +117,77 @@ public class Player {
 
         new_pos = new_pos.add(dir.mul(t));
 
-        int cell = find_cell(new_pos);
+        int cell = find_cell(new_pos, true);
 
         m.updatePosition(new_pos.x, new_pos.y, new_pos.z, rotate&&r_rel);
         if (rotate&&r_rel) {
             rotate = false;
         }
 
-        if (cell == -1) return;
+        boolean valid = true;
 
+        if (cell == -1) valid = false;
+
+        // bounds checking
         if (m.rotated) {
-            if (cell%10+m.len-1 > 9) return;
-            System.out.println(playerGrid.checkValidPlacement(cell / 10, cell % 10, cell / 10, cell % 10 + m.len-1));
+            if (cell%10+m.len-1 > 9) valid = false;
+            if (valid&&!playerGrid.checkValidPlacement(9-cell / 10, cell % 10, 9-cell / 10, cell % 10 + m.len-1)) valid = false;
         } else {
-            if (cell/10+m.len-1 > 9) return;
-            System.out.println(playerGrid.checkValidPlacement(cell / 10, cell % 10, cell / 10 + m.len-1, cell % 10));
+            if (9-cell/10+m.len-1 > 9) valid = false;
+            if (valid&&!playerGrid.checkValidPlacement(9-cell / 10, cell % 10, 9-cell / 10 + m.len-1, cell % 10)) valid = false;
         }
 
         if (place&&e_rel) {
             place = false;
+            if (valid) {
+                m.locked = true;
+                placeShip(cell, m.rotated, m.len);
+                playerGrid.shipAmount -= 1;
+                if (playerGrid.shipAmount == 0) startGame();
+            }
+        }
+    }
+
+    public void process_click(ArrayList<Model> clickable) {
+        if (!gameStarted || !playerTurn) return;
+        Model m = find_interactable(clickable);
+        if (m == null || !m.clickable) return;
+
+        int cell = find_cell(m.position, false);
+        String row = Character.toString((char)(74 - cell/10));
+
+        if (enemyGrid.cells[9-cell/10][cell%10].dead) {
+            return;
+        }
+
+        enemyGrid.shoot(row, cell%10);
+
+        if (!enemyGrid.cells[9-cell/10][cell%10].hasShip) {
+            playerTurn = false;
+        }
+
+        if (enemyGrid.aliveCells == 0) {
+            gameEnded = true;
+            victory = true;
+        }
+    }
+
+    public void do_step() {
+        if (gameEnded) {
+            if (victory)
+                System.out.println("victory");
+            else 
+                System.out.println("loss");
+        }
+
+        if (gameStarted && !playerTurn) {
+            int hit[] = playerGrid.hunt_target_shoot();
+            if (!playerGrid.cells[hit[0]][hit[1]].hasShip) {
+                playerTurn = true;
+            }
+            if (playerGrid.aliveCells == 0) {
+                gameEnded = true;
+            }
         }
     }
 
@@ -153,10 +210,11 @@ public class Player {
         return m;
     }
 
-    private int find_cell(Vector3f pos) {
+    private int find_cell(Vector3f pos, boolean is_player) {
 
         float cell_size = 0.05f;
         float x_start = 0.275f;
+        if (!is_player) x_start = -0.275f - 9.0f*cell_size;
         float y_start = 2.0f;
 
         if (pos.x < x_start || pos.x > x_start + 9.0f * cell_size || pos.z < y_start || pos.z > y_start + 9.0f * cell_size) return -1;
@@ -183,5 +241,19 @@ public class Player {
         int j = (int)((pos.z - y_start + (cell_size*0.5f))/cell_size);
 
         return j*10+i;
+    }
+
+    private void placeShip(int cell, boolean rotated, int len) {
+        String row = Character.toString((char)(74 - cell/10));
+        if (!rotated) {
+            playerGrid.changingCellsCol(row, len, cell%10);
+        } else {
+            playerGrid.changingCellsRow(cell%10, len, row);
+        }
+    }
+
+    private void startGame() {
+        enemyGrid.PlacingEnemyShip();
+        gameStarted = true;
     }
 }

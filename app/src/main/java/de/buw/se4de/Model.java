@@ -27,6 +27,8 @@ public class Model {
     private Matrix4f modelViewMatrix = new Matrix4f();
 
     public int len = 0;
+    public boolean locked = false;
+    public boolean clickable = false;
 
     // FloatBuffer for transferring matrices to OpenGL
     FloatBuffer fb = BufferUtils.createFloatBuffer(16);
@@ -74,6 +76,8 @@ public class Model {
 
     float intersect() {
         float dist = Float.MAX_VALUE;
+
+        if (locked) return -1.0f;
         
         Vector3f ori = new Vector3f();
         Vector3f dir = new Vector3f();
@@ -87,7 +91,7 @@ public class Model {
         Vector2f res = new Vector2f();
 
         Vector3f end = new Vector3f(ori);
-        end = end.add(dir.mul(2.5f));
+        end = end.add(dir.mul(5.0f));
 
         this.start = ori;
         this.end = end;

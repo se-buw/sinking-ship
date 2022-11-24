@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class SDFReader {
 
-    public static void openSDF(String path, ArrayList<Model> models, ArrayList<Model> interactables) {
+    public static void openSDF(String path, ArrayList<Model> models, ArrayList<Model> interactables, ArrayList<Model> clickables) {
         BufferedReader reader;
 		try {
 			reader = new BufferedReader(new FileReader("src/main/resources/"+path+".sdf"));
@@ -20,6 +20,7 @@ public class SDFReader {
                 String inter = line_arr[2];
                 String hidden = line_arr[3];
                 int len = Integer.parseInt(line_arr[4]);
+                String clickable = line_arr[5];
 
                 float x = Float.parseFloat(positions[0]);
                 float y = Float.parseFloat(positions[1]);
@@ -33,6 +34,11 @@ public class SDFReader {
                     interactables.add(m);
                 }
                 m.len = len;
+                m.clickable = clickable.equals("c");
+                if (m.clickable) {
+                    m.setBB();
+                    clickables.add(m);
+                }
 
                 models.add(m);
 
