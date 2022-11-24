@@ -59,6 +59,98 @@ public class grid {
         }
         cells[rowInt][column].dead=true;
     }
+
+    private void updateSunk(int row, int col) {
+        ArrayList<cell> connected = new ArrayList<>();
+        connected.add(cells[row][col]);
+        boolean left = true;
+        boolean right = true;
+        boolean up = true;
+        boolean down = true;
+        cell curr = cells[row][col];
+        while (left) {
+            curr = getLeft(curr);
+            if (curr == null) {
+                left = false;
+            } else {
+                connected.add(cells[curr.x][curr.y]);
+            }
+        }
+        curr = cells[row][col];
+        while (right) {
+            curr = getRight(curr);
+            if (curr == null) {
+                right = false;
+            } else {
+                connected.add(cells[curr.x][curr.y]);
+            }
+        }
+        curr = cells[row][col];
+        while (up) {
+            curr = getUp(curr);
+            if (curr == null) {
+                up = false;
+            } else {
+                connected.add(cells[curr.x][curr.y]);
+            }
+        }
+        curr = cells[row][col];
+        while (down) {
+            curr = getDown(curr);
+            if (curr == null) {
+                down = false;
+            } else {
+                connected.add(cells[curr.x][curr.y]);
+            }
+        }
+
+        boolean is_sunk = true;
+        for (cell c : connected) {
+            if (!c.shotShip) is_sunk = false;
+            System.out.print(c.x);System.out.print(" ");
+            System.out.print(c.y);System.out.print(" ");
+            System.out.println(c.shotShip);
+        }
+        if (is_sunk) {
+            for (cell c : connected) {
+                c.sunkShip = true;
+            }
+        }
+    }
+
+    cell getLeft(cell c) {
+        if (c.x - 1 >= 0) {
+            cell ce = cells[c.x-1][c.y];
+            if (ce.hasShip)
+                return cells[c.x-1][c.y];
+        }
+        return null;
+    }
+    cell getRight(cell c) {
+        if (c.x + 1 < 10) {
+            cell ce = cells[c.x+1][c.y];
+            if (ce.hasShip)
+                return cells[c.x+1][c.y];
+        }
+        return null;
+    }
+    cell getUp(cell c) {
+        if (c.y + 1 < 10) {
+            cell ce = cells[c.x][c.y+1];
+            if (ce.hasShip)
+                return cells[c.x][c.y+1];
+        }
+        return null;
+    }
+    cell getDown(cell c) {
+        if (c.y - 1 >= 0) {
+            cell ce = cells[c.x][c.y-1];
+            if (ce.hasShip)
+                return cells[c.x][c.y-1];
+        }
+        return null;
+    }
+
     //just shoots on a random cell
     public int[] randomShoot(){
         Random rand = new Random();
@@ -77,6 +169,7 @@ public class grid {
                 if (cells[randRow][randCol].hasShip){
                     cells[randRow][randCol].shotShip = true;
                     --aliveCells;
+                    updateSunk(randRow, randCol);
                 }
                 //marking cell as shot
                 cells[randRow][randCol].dead = true;
@@ -109,12 +202,13 @@ public class grid {
                 // if there is an 'unshot' cell left to the 'shot_ship' cell
                 if (!(i % 10 == 0) && field[i - 1] == 0) {
                     // our coordinates in terms if i (working with mod and div)
-                    x = (i - 1) / 10;
-                    y = (i - 1) % 10;
+                    x = (i - 1) % 10;
+                    y = 9-(i - 1) / 10;
                     //if cell has ship
                     if (cells[x][y].hasShip) {
                         cells[x][y].shotShip = true;
                         --aliveCells;
+                        updateSunk(x, y);
                         //I split this part up to have a better overview of the code (functions below)
                         assign_values1(field, i, k);
                     } else {
@@ -125,11 +219,12 @@ public class grid {
                     return new int[]{x, y};
                 } // if there is an 'unshot' cell right
                 else if (!(i % 10 == 9) && (field[i + 1] == 0)) {
-                    x = (i + 1) / 10;
-                    y = (i + 1) % 10;
+                    x = (i + 1) % 10;
+                    y = 9-(i + 1) / 10;
                     if (cells[x][y].hasShip) {
                         cells[x][y].shotShip = true;
                         --aliveCells;
+                        updateSunk(x, y);
                         //second help function
                         assign_values2(field, i, k);
                     } else {
@@ -139,11 +234,12 @@ public class grid {
                     return new int[]{x, y};
                 } // if there is an 'unshot' cell down
                 else if (!(i / 10 == 9) && (field[i + 10] == 0)) {
-                    x = (i + 10) / 10;
-                    y = (i + 10) % 10;
+                    x = (i + 10) % 10;
+                    y = 9-(i + 10) / 10;
                     if (cells[x][y].hasShip) {
                         cells[x][y].shotShip = true;
                         --aliveCells;
+                        updateSunk(x, y);
                         //third function
                         assign_values3(field, i, k);
                     } else {
@@ -153,11 +249,12 @@ public class grid {
                     return new int[]{x, y};
                 } // if there is an 'unshot' cell up
                 else if (!(i / 10 == 0) && (field[i - 10] == 0)) {
-                    x = (i - 10) / 10;
-                    y = (i - 10) % 10;
+                    x = (i - 10) % 10;
+                    y = 9-(i - 10) / 10;
                     if (cells[x][y].hasShip) {
                         cells[x][y].shotShip = true;
                         --aliveCells;
+                        updateSunk(x, y);
                         //fourth function
                         assign_values4(field, i, k);
                     } else {
@@ -173,12 +270,13 @@ public class grid {
                 i = rand.nextInt(100);
                 //if cell unshot
                 if (field[i] == 0) {
-                    x = (i - 1) / 10;
-                    y = (i - 1) % 10;
+                    x = i % 10;
+                    y = 9-i / 10;
                     if (cells[x][y].hasShip) {
                         cells[x][y].shotShip = true;
                         --aliveCells;
                         field[i] = 2;
+                        updateSunk(x, y);
                     } else {
                         field[i] = 1;
                     }

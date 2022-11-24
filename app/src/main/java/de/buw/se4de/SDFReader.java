@@ -37,6 +37,7 @@ public class SDFReader {
                 m.clickable = clickable.equals("c");
                 if (m.clickable) {
                     m.setBB();
+                    m.colored = true;
                     clickables.add(m);
                 }
 

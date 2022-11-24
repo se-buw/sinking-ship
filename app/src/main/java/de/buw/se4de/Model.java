@@ -29,6 +29,8 @@ public class Model {
     public int len = 0;
     public boolean locked = false;
     public boolean clickable = false;
+    public boolean colored = false;
+    public Vector3f color = new Vector3f(1.0f, 1.0f, 1.0f);
 
     // FloatBuffer for transferring matrices to OpenGL
     FloatBuffer fb = BufferUtils.createFloatBuffer(16);
@@ -144,21 +146,30 @@ public class Model {
 
         glBindTexture(GL_TEXTURE_2D, texID);
 
+        if (colored)
+            glDisable(GL_LIGHTING);
+
         glBegin(GL_TRIANGLES);
         for (Triangle t : tris) {
+            glColor3f(color.x, color.y, color.z);
             glTexCoord2f(t.v0.u, t.v0.v);
             glNormal3f(t.v0.norm_x, t.v0.norm_y, t.v0.norm_z);
             glVertex3f(t.v0.pos_x , t.v0.pos_y , t.v0.pos_z);
 
+            glColor3f(color.x, color.y, color.z);
             glTexCoord2f(t.v1.u, t.v1.v);
             glNormal3f(t.v1.norm_x, t.v1.norm_y, t.v1.norm_z);
             glVertex3f(t.v1.pos_x , t.v1.pos_y , t.v1.pos_z);
             
+            glColor3f(color.x, color.y, color.z);
             glTexCoord2f(t.v2.u, t.v2.v);
             glNormal3f(t.v2.norm_x, t.v2.norm_y, t.v2.norm_z);
             glVertex3f(t.v2.pos_x , t.v2.pos_y , t.v2.pos_z);
         }
         glEnd();
+        
+        if (colored)
+            glEnable(GL_LIGHTING);
     }
 
     void drawBB(Camera cam) {

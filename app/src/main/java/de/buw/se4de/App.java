@@ -3,7 +3,6 @@
  */
 package de.buw.se4de;
 
-import java.io.IOException;
 import java.nio.*;
 import java.util.ArrayList;
 
@@ -208,7 +207,7 @@ public class App {
 		lastLoopTime = getTime();
 
 		Matrix4f c_projMatrix = new Matrix4f();
-		c_projMatrix.ortho(0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 100.0f);
+		c_projMatrix.ortho(-1.778f, 1.778f, 1.0f, -1.0f, 0.0f, 100.0f);
 		Matrix4f l_projMatrix = new Matrix4f();
 		Matrix4f l_viewMatrix = new Matrix4f();
 		Matrix4f l_modelMatrix = new Matrix4f();
@@ -219,27 +218,32 @@ public class App {
 		while ( !glfwWindowShouldClose(window) ) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-			glDisable(GL_LIGHTING);
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glLoadMatrixf(c_projMatrix.get(fb));
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
+			if (!player.gameEnded) {
+				glDisable(GL_LIGHTING);
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+				glLoadMatrixf(c_projMatrix.get(fb));
+				glMatrixMode(GL_MODELVIEW);
+				glLoadIdentity();
 
-			glBegin(GL_LINES);
-			glVertex3f(0.5f, 0.48f, 0.0f);
-			glVertex3f(0.5f, 0.52f, 0.0f);
-			
-			glVertex3f(0.48f, 0.5f, 0.0f);
-			glVertex3f(0.52f, 0.5f, 0.0f);
-			glEnd();
+				glBegin(GL_LINES);
+				glColor3f(1.0f, 1.0f, 1.0f);
+				glVertex3f(0.0f, -0.02f, 0.0f);
+				glColor3f(1.0f, 1.0f, 1.0f);
+				glVertex3f(0.0f, 0.02f, 0.0f);
+				
+				glColor3f(1.0f, 1.0f, 1.0f);
+				glVertex3f(-0.02f, 0.0f, 0.0f);
+				glColor3f(1.0f, 1.0f, 1.0f);
+				glVertex3f(0.02f, 0.0f, 0.0f);
+				glEnd();
 
-			glEnable(GL_LIGHTING);
-
+				glEnable(GL_LIGHTING);
+			}
 
 
 			// set light position
-			l_projMatrix.setPerspective((float) Math.toRadians(40), 1280.0f / 720.0f, 0.01f, 100.0f);
+			l_projMatrix.setPerspective((float) Math.toRadians(80), 1280.0f / 720.0f, 0.01f, 100.0f);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			glLoadMatrixf(l_projMatrix.get(fb));
@@ -268,7 +272,16 @@ public class App {
 			// 	m.drawBB(player.get_cam());
 			// }
 
-			player.do_step();
+			player.do_step(clickables);
+			if (player.gameEnded){
+				if (player.victory) {
+					player.cam.pos = new Vector3f(15.0f, 0.0f, 0.0f);
+					player.cam.look_at = new Vector3f(0.0f, 0.0f, 0.0f);
+				} else {
+					player.cam.pos = new Vector3f(-15.0f, 0.0f, 0.0f);
+					player.cam.look_at = new Vector3f(0.0f, 0.0f, 0.0f);
+				}
+			}
 			
 			glfwSwapBuffers(window); // swap the color buffers
 

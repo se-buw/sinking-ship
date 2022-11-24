@@ -34,10 +34,13 @@ public class Player {
 
     private boolean gameStarted = false;
     private boolean playerTurn = true;
-    private boolean gameEnded = false;
-    private boolean victory = false;
+    public boolean gameEnded = false;
+    public boolean victory = false;
+
+    private boolean lockPlayer = false;
 
     public void process_input(long window, float delta) {
+        if (lockPlayer) return;
         Vector3f front = new Vector3f(cam.front);
         Vector3f right = new Vector3f(cam.front);
         right = right.cross(0.0f, 1.0f, 0.0f);
@@ -82,6 +85,7 @@ public class Player {
     }
 
     public void process_mouse(float xoffset, float yoffset) {
+        if (lockPlayer) return;
         xoffset *= mouse_sens;
         yoffset *= mouse_sens;
 
@@ -104,6 +108,7 @@ public class Player {
     }
 
     public void process_hold(ArrayList<Model> interactable) {
+        if (lockPlayer) return;
         Model m = find_interactable(interactable);
         if (m == null) return;
 
@@ -149,6 +154,7 @@ public class Player {
     }
 
     public void process_click(ArrayList<Model> clickable) {
+        if (lockPlayer) return;
         if (!gameStarted || !playerTurn) return;
         Model m = find_interactable(clickable);
         if (m == null || !m.clickable) return;
@@ -172,16 +178,35 @@ public class Player {
         }
     }
 
-    public void do_step() {
+    public void do_step(ArrayList<Model> clickable) {
+        for (Model m : clickable) {
+            int cell = find_cell(m.position, false);
+            cell c = playerGrid.cells[9-cell/10][cell%10];
+            int amount = (c.dead?1:0) + (c.shotShip?1:0) + (c.sunkShip?1:0);
+            switch (amount) {
+                case 0: 
+                    m.color = new Vector3f(0.0f, 0.0f, 1.0f);
+                    break;
+                case 1: 
+                    m.color = new Vector3f(1.0f, 1.0f, 1.0f);
+                    break;
+                case 2: 
+                    m.color = new Vector3f(1.0f, 0.0f, 0.0f);
+                    break;
+                case 3: 
+                    m.color = new Vector3f(0.0f, 0.0f, 0.0f);
+                    break;
+            }
+        }
+
         if (gameEnded) {
-            if (victory)
-                System.out.println("victory");
-            else 
-                System.out.println("loss");
+            lockPlayer = true;
         }
 
         if (gameStarted && !playerTurn) {
+            // int hit[] = playerGrid.randomShoot();
             int hit[] = playerGrid.hunt_target_shoot();
+            System.out.println(playerGrid.aliveCells);
             if (!playerGrid.cells[hit[0]][hit[1]].hasShip) {
                 playerTurn = true;
             }
