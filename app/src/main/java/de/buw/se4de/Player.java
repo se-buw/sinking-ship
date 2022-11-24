@@ -206,7 +206,6 @@ public class Player {
         if (gameStarted && !playerTurn) {
             // int hit[] = playerGrid.randomShoot();
             int hit[] = playerGrid.hunt_target_shoot();
-            System.out.println(playerGrid.aliveCells);
             if (!playerGrid.cells[hit[0]][hit[1]].hasShip) {
                 playerTurn = true;
             }
