@@ -32,6 +32,7 @@ public class App {
      * Used for FPS and UPS calculation.
      */
     private float timeCount;
+	private float timer = 0.0f;
 
 	private double lastX = 0.0;
 	private double lastY = 0.0;
@@ -272,7 +273,12 @@ public class App {
 			// 	m.drawBB(player.get_cam());
 			// }
 
-			player.do_step(clickables);
+			timer += getDelta();
+
+			if (timer > 0.25f) {
+				player.do_step(clickables);
+				timer = 0.0f;
+			}
 			if (player.gameEnded){
 				if (player.victory) {
 					player.cam.pos = new Vector3f(15.0f, 0.0f, 0.0f);
