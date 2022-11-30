@@ -13,7 +13,7 @@ public class SDFReader {
     public static void openSDF(String path, ArrayList<Model> models, ArrayList<Model> interactables, ArrayList<Model> clickables) {
         BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader("src/main/resources/"+path+".sdf"));
+			reader = new BufferedReader(new FileReader("./app/src/main/resources/"+path+".sdf"));
 			String line = reader.readLine();
 			while (line != null) {
 				String[] line_arr = line.split(",");
@@ -70,7 +70,7 @@ public class SDFReader {
         // really basic .obj File parser
         BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader("src/main/resources/"+path+".obj"));
+			reader = new BufferedReader(new FileReader("./app/src/main/resources/"+path+".obj"));
 			String line = reader.readLine();
 			while (line != null) {
 				String[] line_arr = line.split(" ");

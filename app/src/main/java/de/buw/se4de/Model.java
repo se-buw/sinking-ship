@@ -36,7 +36,7 @@ public class Model {
     FloatBuffer fb = BufferUtils.createFloatBuffer(16);
 
     void loadModel(String path, boolean h) {
-        BufferedImage image = TextureLoader.loadImage("src/main/resources/"+path+".png");
+        BufferedImage image = TextureLoader.loadImage("./app/src/main/resources/"+path+".png");
         SDFReader.openModel(path, tris);
         texID = TextureLoader.loadTexture(image);
         hidden = h;

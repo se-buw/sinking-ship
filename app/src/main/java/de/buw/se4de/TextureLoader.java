@@ -61,7 +61,7 @@ public class TextureLoader {
                 return ImageIO.read(new File(loc));
             } catch (IOException e) {
                 try {
-                    return ImageIO.read(new File("src/main/resources/fallback.png"));
+                    return ImageIO.read(new File("./app/src/main/resources/fallback.png"));
                 } catch (IOException f) {
                     f.printStackTrace();
                 } 
