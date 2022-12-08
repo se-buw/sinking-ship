@@ -5,6 +5,12 @@ import java.util.Random;
 import java.util.Scanner;
 import java.lang.Character;
 
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!//
+// THIS CLASS IS DEPRECATED //
+//!!!!!!!!!!!!!!!!!!!!!!!!! //
+
+
 public class GameEngine {
     grid EnemyGrid = new grid();
     grid PlayerGrid = new grid();

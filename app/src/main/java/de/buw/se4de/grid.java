@@ -171,7 +171,6 @@ public class grid {
                 cells[randRow][randCol].dead = true;
                 NotValidShot = false;
             }
-
         }
         return new int[]{randRow,randCol};
     }
@@ -313,7 +312,7 @@ public class grid {
 
 
     //---------------------------------------------------------------------------------
-    //Methods of visualizing and placing player and enemy ships
+    //DEPRECATED: Methods of visualizing and placing player and enemy ships
     //---------------------------------------------------------------------------------
     //Prints player grid with ships seen
     public void PrintPlayerGrid(){
@@ -340,7 +339,7 @@ public class grid {
         }
         System.out.println("  0 1 2 3 4 5 6 7 8 9  ");
     }
-    //Prints the enemy grid without their ships seen
+    //DEPRECATED: Prints the enemy grid without their ships seen
     public void PrintEnemyGrid() {
         System.out.println("\n  0 1 2 3 4 5 6 7 8 9  ");
         for(int current_row=0; current_row < this.rows;current_row++) {
@@ -362,7 +361,7 @@ public class grid {
         }
         System.out.println("  0 1 2 3 4 5 6 7 8 9  ");
     }
-    //Lets a player place all ships, all with decidable length
+    // DEPRECATED: Lets a player place all ships, all with decidable length
     public void PlacingPlayerShip(){
         //checking which ship to place
         boolean NotValidLength = true;

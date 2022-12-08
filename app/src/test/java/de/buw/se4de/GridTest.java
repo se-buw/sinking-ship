@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GridTest{
 	@Test
-	void getLeft_test(){
+	void getLeft_true_Test(){
 		grid testGrid = new grid();
 		cell testCell1 = new cell();
 		cell testCell2 = new cell();
@@ -19,8 +19,24 @@ class GridTest{
 		cell newCell = testGrid.getLeft(testCell1);
 		assertEquals(0, newCell.x);
 	}
+
 	@Test
-	void getRight_test(){
+	void getLeft_false_test(){
+		grid testGrid = new grid();
+		cell testCell1 = new cell();
+		cell testCell2 = new cell();
+		testCell1.x = 1;
+		testCell1.y = 2;
+		testCell2.hasShip = false;
+		testGrid.cells[0][2] = testCell2;
+		cell newCell = testGrid.getLeft(testCell1);
+		if (newCell == null) {
+			System.out.println("Success: Cell is null");
+		}
+	}
+
+	@Test
+	void getRight_true_test(){
 		grid testGrid = new grid();
 		cell testCell1 = new cell();
 		cell testCell2 = new cell();
@@ -34,7 +50,23 @@ class GridTest{
 		assertEquals(9, newCell.x);
 	}
 	@Test
-	void getUp_test(){
+	void getRight_false_test(){
+		grid testGrid = new grid();
+		cell testCell1 = new cell();
+		cell testCell2 = new cell();
+		testCell1.x = 8;
+		testCell1.y = 2;
+		testCell2.x = 9;
+		testCell2.y = 2;
+		testCell2.hasShip = false;
+		testGrid.cells[9][2] = testCell2;
+		cell newCell = testGrid.getRight(testCell1);
+		if (newCell == null) {
+			System.out.println("Success: Cell is null");
+		}
+	}
+	@Test
+	void getUp_outOfBounds_test(){
 		grid testGrid = new grid();
 		cell testCell1 = new cell();
 		cell testCell2 = new cell();
@@ -49,10 +81,22 @@ class GridTest{
 			System.out.println("Success: Cell is null");
 		}
 	}
-	void updatesunk_test() {
 
+	@Test
+	void getDown_outOfBounds_test(){
+		grid testGrid = new grid();
+		cell testCell1 = new cell();
+		cell testCell2 = new cell();
+		testCell1.x = Integer.MAX_VALUE-1;
+		testCell1.y = -0;
+		testCell2.x = 123;
+		testCell2.y = 33;
+		testCell2.hasShip = true;
+		testGrid.cells[9][2] = testCell2;
+		cell newCell = testGrid.getRight(testCell1);
+		if (newCell == null) {
+			System.out.println("Success: Cell is null");
+		}
 	}
-
-
 }
 
