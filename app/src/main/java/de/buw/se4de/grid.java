@@ -147,7 +147,7 @@ public class grid {
         return null;
     }
 
-    //just shoots on a random cell
+    //just shoots at a random cell
     public int[] randomShoot(){
         Random rand = new Random();
         boolean NotValidShot= true;
