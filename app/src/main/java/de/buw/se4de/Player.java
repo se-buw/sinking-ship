@@ -39,6 +39,24 @@ public class Player {
 
     private boolean lockPlayer = false;
 
+    public boolean stay_in_box(){
+        if ((cam.pos.z < 1.9) && (cam.pos.z > -0.9) && (cam.pos.x < 1.9) && (cam.pos.x > -1.9)){
+            return true;
+        }
+        else if (cam.pos.z > 1.9){
+            cam.pos.add(0,0,-0.1f);
+        }
+        else if (cam.pos.z < -0.9){
+            cam.pos.add(0,0,0.1f);
+        }
+        else if (cam.pos.x > 1.9){
+            cam.pos.add(-0.1f,0,0);
+        }
+        else if (cam.pos.x < -1.9){
+            cam.pos.add(0.1f,0,0f);
+        }
+        return false;
+    }
     public void process_input(long window, float delta) {
         if (lockPlayer) return;
         Vector3f front = new Vector3f(cam.front);
@@ -50,16 +68,16 @@ public class Player {
         front = front.normalize();
         right = right.normalize();
 
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && stay_in_box()) {
             cam.pos.add(front.mul(mv_speed * delta));
         } 
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && stay_in_box()) {
             cam.pos.add(front.mul(mv_speed * delta * -1.0f));
         }
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && stay_in_box()) {
             cam.pos.add(right.mul(mv_speed * delta * -1.0f));
         } 
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && stay_in_box()) {
             cam.pos.add(right.mul(mv_speed * delta));
         }
         if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
